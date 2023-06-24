@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Reviews</title>
+    <link rel="stylesheet" href="/css/stile.css" />
+</head>
+<body>
+    <h1>Recensioni</h1>
+    
+    <h2>Titolo del film: <span th:text="${movie.title}"></span></h2>
+    
+    <table>
+        <tr>
+            <th>Titolo</th>
+            <th>Valutazione</th>
+            <th>Testo</th>
+        </tr>
+        <tr th:each="recensione : ${recensioni}">
+            <td th:text="${reviw.title}"></td>
+            <td th:text="${review.score}"></td>
+            <td th:text="${review.text}"></td>
+        </tr>
+    </table>
+</body>
+</html>

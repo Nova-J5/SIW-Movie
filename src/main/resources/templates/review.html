@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Review</title>
+    <link rel="stylesheet" href="/css/stile.css" />
+</head>
+<body>
+	    
+    <h3>Titolo: <span th:text="${review.title}"></span></h3>
+    <p>Valutazione: <span th:text="${review.score}"></span></p>
+    <p>Testo: <span th:text="${review.text}"></span></p>
+    
+    <a th:href="@{/reviews/delete(Id=${review.id})}" 
+       onclick="return confirm('Sei sicuro di voler eliminare questa recensione?')">Elimina</a>
+</body>
+</html>

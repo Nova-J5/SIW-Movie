@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Cancella Recensione</title>
+    <link rel="stylesheet" href="/css/stile.css" />
+</head>
+<body>
+    <h1>Delete Review</h1>
+    
+    <form th:action="@{/reviews/delete}" method="post">
+        <input type="hidden" name="Id" th:value="${review.id}">
+        <h3>Titolo: <span th:text="${review.title}"></span></h3>
+        <p>Valutazione: <span th:text="${review.score}"></span></p>
+        <p>Testo: <span th:text="${review.text}"></span></p>
+        
+        <p>Sei sicuro di voler eliminare questa recensione?</p>
+        
+        <input type="submit" value="Elimina">
+    </form>
+</body>
+</html>
