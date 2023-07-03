@@ -1,0 +1,13 @@
+
+
+.artist-details {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.artist-not-found {
+    margin-top: 20px;
+    text-align: center;
+    font-style: italic;
+    color: red;
+}

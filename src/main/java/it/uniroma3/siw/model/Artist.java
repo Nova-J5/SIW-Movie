@@ -1,6 +1,7 @@
 package it.uniroma3.siw.model;
 
 import java.time.LocalDate;
+
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -9,25 +10,38 @@ import java.util.Set;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Transient;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
 public class Artist {
-    @Id
+  
+	@Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @NotBlank
 	private String name;
+    
+    @NotBlank
 	private String surname;
 	
+    @NotBlank
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate dateOfBirth;
-	private String urlOfPicture;
+    
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate dateOfDeath;
+    
+	@Column(nullable = true, length = 64)
+	private String image;
 	
 	@ManyToMany(mappedBy="actors")
 	private Set<Movie> starredMovies;
@@ -72,14 +86,45 @@ public class Artist {
 		this.dateOfBirth = dateOfBirth;
 	}
 	
-	public String getUrlOfPicture() {
-		return urlOfPicture;
+	public LocalDate getDateOfDeath() {
+		return dateOfDeath;
+	}
+
+	public void setDateOfDeath(LocalDate dateOfDeath) {
+		this.dateOfDeath = dateOfDeath;
+	}
+
+	public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
 	}
 	
-	public void setUrlOfPicture(String urlOfPicture) {
-		this.urlOfPicture = urlOfPicture;
+	@Transient
+    public String getPhotoImagePath() {
+        if (image == null || id == null) return null;
+         
+        return "/user-photos/" + id + "/" + image;
+    }
+
+	public Set<Movie> getStarredMovies() {
+		return starredMovies;
 	}
-	
+
+	public void setStarredMovies(Set<Movie> starredMovies) {
+		this.starredMovies = starredMovies;
+	}
+
+	public List<Movie> getDirectedMovies() {
+		return directedMovies;
+	}
+
+	public void setDirectedMovies(List<Movie> directedMovies) {
+		this.directedMovies = directedMovies;
+	}
+
 	public Set<Movie> getActorOf() {
 		return starredMovies;
 	}

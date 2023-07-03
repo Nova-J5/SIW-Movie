@@ -1,0 +1,35 @@
+.film-title {
+  color: #3f51b5;
+  font-size: 24px;
+  font-weight: 500;
+  margin-bottom: 20px;
+}
+
+.film-empty-message {
+  margin-bottom: 10px;
+  color: #777;
+}
+
+.film-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.film-item {
+  margin-bottom: 10px;
+}
+
+.film-item span {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.film-update-link {
+  color: #3f51b5;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.film-update-link:hover {
+  color: #303f9f;
+}

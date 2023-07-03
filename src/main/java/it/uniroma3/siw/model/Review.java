@@ -30,6 +30,9 @@ public class Review {
 	    
 	    @ManyToOne
 	    private Movie movie;
+	    
+	    @ManyToOne
+	    private User user;
 
 		public Long getId() {
 			return id;

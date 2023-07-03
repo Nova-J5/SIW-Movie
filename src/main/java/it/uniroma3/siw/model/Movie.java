@@ -1,14 +1,18 @@
 package it.uniroma3.siw.model;
 
 import java.util.Objects;
+
 import java.util.Set;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Transient;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -29,13 +33,17 @@ public class Movie {
         @Max(2023)
         private Integer year;
         
-        private String urlImage;
+        @Column(nullable = true, length = 64)
+        private String image;
         
         @ManyToOne
         private Artist director;
         
         @ManyToMany
         private Set<Artist> actors;
+        
+        @OneToMany(mappedBy="movie")
+        private Set<Review> reviews;
     
         public Long getId() {
             return id;
@@ -60,12 +68,19 @@ public class Movie {
             this.year = year;
         }
         
-        public String getUrlImage() {
-            return urlImage;
+        public String getImage() {
+            return image;
         }
     
-        public void setUrlImage(String urlImage) {
-            this.urlImage = urlImage;
+        public void setImage(String image) {
+            this.image = image;
+        }
+        
+        @Transient
+        public String getPhotoImagePath() {
+            if (image == null || id == null) return null;
+             
+            return "/user-photos/" + id + "/" + image;
         }
     
         public Artist getDirector() {
@@ -100,4 +115,5 @@ public class Movie {
             Movie other = (Movie) obj;
             return Objects.equals(title, other.title) && year.equals(other.year);
         }
-    }
+        
+}

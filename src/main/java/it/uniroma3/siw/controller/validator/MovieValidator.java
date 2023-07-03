@@ -10,6 +10,7 @@ import it.uniroma3.siw.repository.MovieRepository;
 
 @Component
 public class MovieValidator implements Validator {
+	
 	@Autowired
 	private MovieRepository movieRepository;
 
@@ -21,6 +22,7 @@ public class MovieValidator implements Validator {
 			errors.reject("movie.duplicate");
 		}
 	}
+	
 	@Override
 	public boolean supports(Class<?> aClass) {
 		return Movie.class.equals(aClass);

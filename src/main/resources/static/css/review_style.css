@@ -1,0 +1,24 @@
+
+.review-title {
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.review-rating {
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.review-text {
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+.delete-review-link {
+    color: red;
+    text-decoration: none;
+}
+
+.delete-review-link:hover {
+    text-decoration: underline;
+}

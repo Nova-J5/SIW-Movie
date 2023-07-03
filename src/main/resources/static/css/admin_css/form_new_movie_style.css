@@ -1,0 +1,47 @@
+.add-movie-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.add-movie-form {
+    max-width: 400px;
+}
+
+.global-error {
+    margin-bottom: 10px;
+}
+
+.error-message {
+    color: red;
+}
+
+.form-row {
+    margin-bottom: 10px;
+}
+
+.form-label {
+    display: inline-block;
+    width: 120px;
+    font-weight: bold;
+}
+
+.form-input {
+    width: 100%;
+    padding: 5px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.form-button {
+    display: inline-block;
+    background-color: #007bff;
+    color: #ffffff;
+    padding: 5px 10px;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}

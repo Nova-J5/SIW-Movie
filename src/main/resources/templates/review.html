@@ -1,16 +1,80 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
-    <title>Review</title>
-    <link rel="stylesheet" href="/css/stile.css" />
-</head>
-<body>
-	    
-    <h3>Titolo: <span th:text="${review.title}"></span></h3>
-    <p>Valutazione: <span th:text="${review.score}"></span></p>
-    <p>Testo: <span th:text="${review.text}"></span></p>
     
-    <a th:href="@{/reviews/delete(Id=${review.id})}" 
-       onclick="return confirm('Sei sicuro di voler eliminare questa recensione?')">Elimina</a>
+    <title>Recensione</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/stile.css" />
+    <link rel="stylesheet" href="/css/review_style.css" />
+    <link 
+		href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" 
+		rel="stylesheet" 
+		integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" 
+		crossorigin="anonymous">
+	<link
+        href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&family=Sen:wght@400;700;800&display=swap"
+        rel="stylesheet">
+    <link
+     	rel="stylesheet" 
+    	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css">
+    	
+</head>
+
+<body>
+	
+	<nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4">
+	    <div class="container-fluid">
+	        <a href="/">
+	            <img class="logo" src="/images/logo-siw.png" width="22%" alt="logo" />
+	        </a>		    
+	        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+	            <span class="navbar-toggler-icon"></span>
+	        </button>
+	        <div class="collapse navbar-collapse" id="navbarCollapse">
+	            <ul class="navbar-nav me-auto mb-2 mb-md-0">
+	                <li class="nav-item" th:if="${userDetails}">
+	                    <a class="nav-link" href="/user.html">
+	                        <span th:text="${userDetails.username}"></span>
+	                    </a>
+	                </li>
+	                <li class="nav-item" th:if="${userDetails}">
+						<a class="nav-link" href="/logout">Logout</a>
+	                </li>
+	                <li class="nav-item" th:unless="${user}" sec:authorize="!isAuthenticated()">
+	                    <a class="nav-link" href="/login">Login</a>
+	                </li>				
+	                <li class="nav-item">
+	                    <a class="nav-link" href="/movie">Film</a>
+	                </li>
+	                <li class="nav-item">
+	                    <a class="nav-link" href="/artist">Artisti</a>
+	                </li>
+	            </ul>
+	            <form class="d-flex" role="search" th:action="@{/searchMovies}" method="post">
+	                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+	                <button class="btn btn-outline-success" type="submit">Cerca</button>
+	            </form>
+	        </div>
+	    </div>
+	</nav>
+	
+    <div class="container">
+        <h3 class="review-title">Titolo: <span th:text="${review.title}"></span></h3>
+        <p class="review-rating">Valutazione: <span th:text="${review.score}"></span></p>
+        <p class="review-text">Testo: <span th:text="${review.text}"></span></p>
+
+        <a class="delete-review-link" th:href="@{/reviews/delete(Id=${review.id})}"
+            onclick="return confirm('Sei sicuro di voler eliminare questa recensione?')">Elimina</a>
+    </div>
+    
+<script 
+	src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" 
+	integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" 
+	crossorigin="anonymous"></script>
+	    
 </body>
+
 </html>

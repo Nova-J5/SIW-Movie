@@ -1,5 +1,7 @@
 package it.uniroma3.siw.controller;
 
+import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -7,31 +9,35 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.view.RedirectView;
 
 import it.uniroma3.siw.controller.validator.MovieValidator;
 import it.uniroma3.siw.model.Artist;
 import it.uniroma3.siw.model.Movie;
-import it.uniroma3.siw.repository.ArtistRepository;
-import it.uniroma3.siw.repository.MovieRepository;
-import jakarta.validation.Valid;
+import it.uniroma3.siw.service.ArtistService;
+import it.uniroma3.siw.service.MovieService;
+import it.uniroma3.siw.util.FileUploadUtil;
+import it.uniroma3.siw.util.Utils;
 
 @Controller
 public class MovieController {
-	@Autowired 
-	private MovieRepository movieRepository;
 	
 	@Autowired 
-	private ArtistRepository artistRepository;
-
-	@Autowired 
+	private MovieService movieService;
+	
+	@Autowired
+	private ArtistService artistService;
+	
+	@Autowired
 	private MovieValidator movieValidator;
-
+	
+	
 	@GetMapping(value="/admin/formNewMovie")
 	public String formNewMovie(Model model) {
 		model.addAttribute("movie", new Movie());
@@ -40,7 +46,7 @@ public class MovieController {
 
 	@GetMapping(value="/admin/formUpdateMovie/{id}")
 	public String formUpdateMovie(@PathVariable("id") Long id, Model model) {
-		model.addAttribute("movie", movieRepository.findById(id).get());
+		model.addAttribute("movie", movieService.getMovie(id));
 		return "admin/formUpdateMovie.html";
 	}
 
@@ -51,17 +57,17 @@ public class MovieController {
 	
 	@GetMapping(value="/admin/manageMovies")
 	public String manageMovies(Model model) {
-		model.addAttribute("movies", this.movieRepository.findAll());
+		model.addAttribute("movies", this.movieService.getAllMovies());
 		return "admin/manageMovies.html";
 	}
 	
 	@GetMapping(value="/admin/setDirectorToMovie/{directorId}/{movieId}")
 	public String setDirectorToMovie(@PathVariable("directorId") Long directorId, @PathVariable("movieId") Long movieId, Model model) {
 		
-		Artist director = this.artistRepository.findById(directorId).get();
-		Movie movie = this.movieRepository.findById(movieId).get();
+		Artist director = this.artistService.getArtist(directorId);
+		Movie movie = this.movieService.getMovie(movieId);
 		movie.setDirector(director);
-		this.movieRepository.save(movie);
+		this.movieService.addMovie(movie);
 		
 		model.addAttribute("movie", movie);
 		return "admin/formUpdateMovie.html";
@@ -70,33 +76,31 @@ public class MovieController {
 	
 	@GetMapping(value="/admin/addDirector/{id}")
 	public String addDirector(@PathVariable("id") Long id, Model model) {
-		model.addAttribute("artists", artistRepository.findAll());
-		model.addAttribute("movie", movieRepository.findById(id).get());
+		model.addAttribute("artists", artistService.getAllArtists());
+		model.addAttribute("movie", movieService.getAllMovies());
 		return "admin/directorsToAdd.html";
 	}
-
-	@PostMapping("/admin/movie")
-	public String newMovie(@Valid @ModelAttribute("movie") Movie movie, BindingResult bindingResult, Model model) {
+	
 		
-		this.movieValidator.validate(movie, bindingResult);
-		if (!bindingResult.hasErrors()) {
-			this.movieRepository.save(movie); 
-			model.addAttribute("movie", movie);
-			return "movie.html";
-		} else {
-			return "admin/formNewMovie.html"; 
-		}
-	}
-
-	@GetMapping("/movie/{id}")
-	public String getMovie(@PathVariable("id") Long id, Model model) {
-		model.addAttribute("movie", this.movieRepository.findById(id).get());
-		return "movie.html";
-	}
+	@PostMapping("/admin/movie")
+    public RedirectView newMovie(Movie movie,
+            @RequestParam("image") MultipartFile multipartFile) throws IOException {
+         
+        String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
+        movie.setImage(fileName);
+         
+        Movie savedMovie = this.movieService.addMovie(movie);
+ 
+        String uploadDir = "user-photos/" + savedMovie.getId();
+ 
+        FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
+         
+        return new RedirectView("/movie", true);
+    }
 
 	@GetMapping("/movie")
 	public String getMovies(Model model) {		
-		model.addAttribute("movies", this.movieRepository.findAll());
+		model.addAttribute("movies", this.movieService.getAllMovies());
 		return "movies.html";
 	}
 	
@@ -107,7 +111,7 @@ public class MovieController {
 
 	@PostMapping("/searchMovies")
 	public String searchMovies(Model model, @RequestParam int year) {
-		model.addAttribute("movies", this.movieRepository.findByYear(year));
+		model.addAttribute("movies", this.movieService.findMoviesByYear(year));
 		return "foundMovies.html";
 	}
 	
@@ -116,18 +120,18 @@ public class MovieController {
 
 		List<Artist> actorsToAdd = this.actorsToAdd(id);
 		model.addAttribute("actorsToAdd", actorsToAdd);
-		model.addAttribute("movie", this.movieRepository.findById(id).get());
+		model.addAttribute("movie", this.movieService.getMovie(id));
 
 		return "admin/actorsToAdd.html";
 	}
 
 	@GetMapping(value="/admin/addActorToMovie/{actorId}/{movieId}")
 	public String addActorToMovie(@PathVariable("actorId") Long actorId, @PathVariable("movieId") Long movieId, Model model) {
-		Movie movie = this.movieRepository.findById(movieId).get();
-		Artist actor = this.artistRepository.findById(actorId).get();
+		Movie movie = this.movieService.getMovie(movieId);
+		Artist actor = this.artistService.getArtist(actorId);
 		Set<Artist> actors = movie.getActors();
 		actors.add(actor);
-		this.movieRepository.save(movie);
+		this.movieService.addMovie(movie);
 		
 		List<Artist> actorsToAdd = actorsToAdd(movieId);
 		
@@ -139,11 +143,11 @@ public class MovieController {
 	
 	@GetMapping(value="/admin/removeActorFromMovie/{actorId}/{movieId}")
 	public String removeActorFromMovie(@PathVariable("actorId") Long actorId, @PathVariable("movieId") Long movieId, Model model) {
-		Movie movie = this.movieRepository.findById(movieId).get();
-		Artist actor = this.artistRepository.findById(actorId).get();
+		Movie movie = this.movieService.getMovie(movieId);
+		Artist actor = this.artistService.getArtist(actorId);
 		Set<Artist> actors = movie.getActors();
 		actors.remove(actor);
-		this.movieRepository.save(movie);
+		this.movieService.addMovie(movie);
 
 		List<Artist> actorsToAdd = actorsToAdd(movieId);
 		
@@ -152,11 +156,24 @@ public class MovieController {
 
 		return "admin/actorsToAdd.html";
 	}
+	
+	@GetMapping("/admin/formDeleteMovie")
+	public String formDeleteMovie(Model model) {
+		model.addAttribute("movies", this.movieService.getAllMovies());
+		return "admin/formDeleteMovie.html";
+	}
+	
+	@PostMapping("/admin/deleteMovie")
+	public String deleteMovie(@RequestParam("movie") Long id, Model model) throws IOException {
+		Utils.deleteImage(movieService.getMovie(id).getImage());
+		this.movieService.deleteMovie(id);
+		return "/movie";
+	}
 
 	private List<Artist> actorsToAdd(Long movieId) {
 		List<Artist> actorsToAdd = new ArrayList<>();
 
-		for (Artist a : artistRepository.findActorsNotInMovie(movieId)) {
+		for (Artist a : artistService.findActorsNotInMovie(movieId)) {
 			actorsToAdd.add(a);
 		}
 		return actorsToAdd;

@@ -1,10 +1,15 @@
 package it.uniroma3.siw.model;
 
+import java.util.Set;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotBlank;
 
 @Entity
@@ -19,8 +24,15 @@ public class User {
 	private String name;
 	@NotBlank
 	private String surname;
-	@NotBlank
+	
+    @Column(unique=true, nullable=false)
 	private String email;
+    
+    @Column(nullable = true, length = 64)
+    private String photo;
+    
+    @OneToMany
+    private Set<Review> reviews;
 
     public Long getId() {
 		return id;
@@ -29,6 +41,7 @@ public class User {
 	public void setId(Long id) {
 		this.id = id;
 	}
+	
 	public String getName() {
 		return name;
 	}
@@ -53,6 +66,21 @@ public class User {
 		this.email = email;
 	}
 
+	public String getPhoto() {
+		return photo;
+	}
+
+	public void setPhoto(String photo) {
+		this.photo = photo;
+	}
+
+	@Transient
+    public String getPhotosImagePath() {
+        if (photo == null || id == null) return null;
+         
+        return "/user-photo/" + id + "/" + photo;
+    }
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -89,4 +117,5 @@ public class User {
 			return false;
 		return true;
 	}
+	
 }

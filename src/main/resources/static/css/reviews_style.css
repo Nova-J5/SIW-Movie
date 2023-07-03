@@ -1,0 +1,36 @@
+
+
+.reviews-title {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.movie-title {
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.reviews-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.reviews-table th,
+.reviews-table td {
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+}
+
+.reviews-table th {
+    font-weight: bold;
+    text-align: left;
+    background-color: #f2f2f2;
+}
+
+.reviews-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.reviews-table tr:hover {
+    background-color: #e6e6e6;
+}

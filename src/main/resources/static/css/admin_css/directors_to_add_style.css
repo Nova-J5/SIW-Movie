@@ -1,0 +1,30 @@
+.director-title {
+  color: #3f51b5;
+  font-size: 24px;
+  font-weight: 500;
+}
+
+.no-directors-message {
+  color: #616161;
+  font-size: 16px;
+  margin-top: 10px;
+}
+
+.director-list {
+  list-style-type: none;
+  margin-top: 20px;
+}
+
+.director-item {
+  margin-bottom: 10px;
+}
+
+.director-link {
+  color: #3f51b5;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.director-link:hover {
+  text-decoration: underline;
+}

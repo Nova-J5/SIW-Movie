@@ -5,7 +5,9 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import it.uniroma3.siw.model.Credentials;
 import it.uniroma3.siw.model.User;
+import it.uniroma3.siw.repository.CredentialsRepository;
 import it.uniroma3.siw.repository.UserRepository;
 
 import java.util.ArrayList;
@@ -20,6 +22,10 @@ public class UserService {
 
     @Autowired
     protected UserRepository userRepository;
+    
+    @Autowired
+    protected CredentialsRepository credentialsRepository;
+
 
     /**
      * This method retrieves a User from the DB based on its ID.
@@ -31,6 +37,13 @@ public class UserService {
         Optional<User> result = this.userRepository.findById(id);
         return result.orElse(null);
     }
+    
+    @Transactional
+    public User getUserByUsername(String username) {
+        Optional<Credentials> credentials = this.credentialsRepository.findByUsername(username);
+        User user = credentials.get().getUser();
+        return user;
+    }
 
     /**
      * This method saves a User in the DB.
@@ -40,7 +53,7 @@ public class UserService {
      *                              as the passed User already exists in the DB
      */
     @Transactional
-    public User saveUser(User user) {
+    public User addUser(User user) {
         return this.userRepository.save(user);
     }
 

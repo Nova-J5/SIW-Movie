@@ -1,0 +1,55 @@
+
+
+/* Stile del titolo principale */
+.delete-review-title {
+    color: #3f51b5;
+    font-size: 24px;
+    font-weight: 500;
+    margin-bottom: 20px;
+}
+
+/* Stile del form di eliminazione della recensione */
+.delete-review-form {
+    margin-top: 20px;
+}
+
+/* Stile del titolo della recensione */
+.review-title {
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 10px;
+}
+
+/* Stile del punteggio della recensione */
+.review-score {
+    color: #616161;
+    margin-bottom: 10px;
+}
+
+/* Stile del testo della recensione */
+.review-text {
+    color: #616161;
+    margin-bottom: 20px;
+}
+
+/* Stile del messaggio di conferma */
+.confirmation-message {
+    color: #f44336;
+    margin-bottom: 10px;
+}
+
+/* Stile del pulsante di eliminazione */
+.delete-button {
+    background-color: #f44336;
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.delete-button:hover {
+    background-color: #d32f2f;
+}
+

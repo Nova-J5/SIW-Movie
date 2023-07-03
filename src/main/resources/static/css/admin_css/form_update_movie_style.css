@@ -1,0 +1,76 @@
+
+
+/* Titolo */
+.update-movie-title {
+  color: var(--primary-color);
+  font-size: 24px;
+  font-weight: 500;
+  margin-bottom: 20px;
+}
+
+/* Dettagli del film */
+.movie-details {
+  background-color: var(--background-color);
+  padding: 20px;
+  border-radius: 8px;
+}
+
+/* Informazioni sul film */
+.movie-info {
+  margin-bottom: 10px;
+}
+
+.movie-title {
+  color: var(--primary-color);
+  font-weight: 500;
+}
+
+/* Informazioni sul regista */
+.director-info {
+  margin-bottom: 10px;
+}
+
+.director-name {
+  color: var(--text-color);
+  font-weight: 500;
+}
+
+.modify-director {
+  color: var(--accent-color);
+  text-decoration: none;
+  margin-left: 10px;
+}
+
+/* Aggiunta del regista */
+.add-director a {
+  color: var(--accent-color);
+  text-decoration: none;
+}
+
+/* Informazioni sugli attori */
+.actors-info {
+  margin-bottom: 10px;
+}
+
+.actor {
+  margin-bottom: 5px;
+}
+
+.modify-actors button {
+  background-color: var(--accent-color);
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.non-existing-movie {
+  color: var(--text-color);
+  font-weight: 500;
+}
+
+
