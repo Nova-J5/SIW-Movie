@@ -1,5 +1,4 @@
 
-
 .index-title {
     max-width: 1200px;
 	margin: 0 auto;
@@ -36,7 +35,7 @@
 }
 
 .movie-list-option:hover {
-	background-color: red;
+	background-color: indianred;
 }
 
 .artist-list-option:hover {

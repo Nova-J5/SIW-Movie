@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>
+			Utente
+		</title>
+		<div th:replace="fragments/css :: css-dep"></div>
+	</head>
+	<body>
+		<div th:replace="fragments/navbar :: navbar"></div>
+		
+			
+		<!-- Profile widget -->
+		<div class="bg-white shadow rounded overflow-hidden">
+		    <div class="px-4 pt-0 pb-4 bg-white">
+		        <div class="media align-items-end profile-header">
+		            <div class="profile mt-3 mr-3">
+		                <div th:if="${user.image} != null" class="avatar">
+		                    <img th:src="@{'/display/image/' + ${user.image.id}}" width="20%" alt="..."
+		                        class="rounded mb-2 img-thumbnail">
+		                </div>
+		                <div th:if="${user.image} == null" class="avatar">
+		                    <img src="https://cdn.pixabay.com/photo/2012/04/26/19/43/profile-42914_1280.png" width="20%" alt="..."
+		                        class="rounded mb-2 img-thumbnail">
+		                </div>
+		                <a th:href="@{'/formUpdateUser/' + ${user.id}}" class="btn btn-dark btn-sm btn-block">Modifica profilo</a>
+		            </div>
+		            <div class="media-body mb-5 text-black">
+		                <h4 class="mt-3 mb-0" th:text="${user.name} + ' ' + ${user.surname}"></h4>
+		                <span th:text="'@' + ${userDetails.username}" class="small mb-4"></span>
+		            </div>
+		        </div>
+		    </div>
+		
+		    <div class="bg-light p-4 d-flex justify-content-center text-center">
+		        <ul class="list-inline mb-0">
+		            <li class="list-inline-item">
+		                <h5 th:text="${#lists.size(reviews)}" class="font-weight-bold mb-0 d-block"></h5>
+						<small class="text-muted">Recensioni</small>
+		            </li>
+		        </ul>
+		    </div>
+		
+		    <div class="py-4 px-4">
+		        <div class="d-flex align-items-center justify-content-between mb-3">
+		            <h5 class="mb-0">Film recensiti</h5>
+		            <a th:href="@{'/reviews/' + ${user.id}}" class="btn btn-link text-muted">Mostra tutti</a>
+		        </div>
+		        <div class="row">
+		            <div class="col-lg-6 mb-2 pr-lg-1"><img src="https://bootstrapious.com/i/snippets/sn-profile/img-3.jpg"
+		                    alt="" class="img-fluid rounded shadow-sm"></div>
+		            <div class="col-lg-6 mb-2 pl-lg-1"><img src="https://bootstrapious.com/i/snippets/sn-profile/img-4.jpg"
+		                    alt="" class="img-fluid rounded shadow-sm"></div>
+		            <div class="col-lg-6 pr-lg-1 mb-2"><img src="https://bootstrapious.com/i/snippets/sn-profile/img-5.jpg"
+		                    alt="" class="img-fluid rounded shadow-sm"></div>
+		            <div class="col-lg-6 pl-lg-1"><img src="https://bootstrapious.com/i/snippets/sn-profile/img-6.jpg" alt=""
+		                    class="img-fluid rounded shadow-sm"></div>
+		        </div>
+		    </div>
+		</div><!-- End profile widget -->
+	    
+		<div th:replace="fragments/footer :: footer"></div>
+	</body>
+</html>

@@ -5,17 +5,20 @@ import java.io.IOException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.view.RedirectView;
-
+import it.uniroma3.siw.controller.validator.ArtistValidator;
 import it.uniroma3.siw.model.Artist;
+import it.uniroma3.siw.model.Image;
+import it.uniroma3.siw.model.Movie;
 import it.uniroma3.siw.service.ArtistService;
-import it.uniroma3.siw.util.FileUploadUtil;
+import it.uniroma3.siw.service.ImageService;
+import jakarta.validation.Valid;
 
 @Controller
 public class ArtistController {
@@ -23,45 +26,66 @@ public class ArtistController {
 	@Autowired
 	private ArtistService artistService;
 	
-
-	@GetMapping(value="/admin/formNewArtist")
-	public String formNewArtist(Model model) {
-		model.addAttribute("artist", new Artist());
-		return "admin/formNewArtist.html";
-	}
+	@Autowired
+	private ArtistValidator artistValidator;
 	
-	@GetMapping(value="/admin/indexArtist")
-	public String indexArtist() {
-		return "admin/indexArtist.html";
-	}
+	@Autowired
+	private ImageService imageService;
 	
-	@PostMapping("/admin/artist")
-	    public RedirectView newArtist(Artist artist,
-	            @RequestParam("image") MultipartFile multipartFile) throws IOException {
-	         
-	        String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
-	        artist.setImage(fileName);
-	         
-	        Artist savedArtist = this.artistService.addArtist(artist);
-	 
-	        String uploadDir = "user-photos/" + savedArtist.getId();
-	 
-	        FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
-	         
-	        return new RedirectView("/artist", true);
-	 }
-
+	
 	@GetMapping("/artist/{id}")
-	public String getArtist(@PathVariable("id") Long id, Model model) {
-		model.addAttribute("artist", this.artistService.getArtist(id));
-		return "artist.html";
+	  public String getArtist(@PathVariable("id") Long id, Model model) {
+	    Artist artist = this.artistService.getArtist(id);
+	    if (artist != null) {
+	    	model.addAttribute("artist", artist);
+	    	model.addAttribute("directedMovies", artist.getDirectedMovies());
+	    	model.addAttribute("starredMovies", artist.getStarredMovies());
+	    	return "artist.html";
+	    }
+	    else {
+			return "artistError.html";
+	    }
 	}
-
-	@GetMapping("/artist")
+	
+	@GetMapping("/artists")
 	public String getArtists(Model model) {
 		model.addAttribute("artists", this.artistService.getAllArtists());
 		return "artists.html";
 	}
 	
+	@GetMapping("/admin/formNewArtist")
+	public String formNewArtist(Model model) {
+		model.addAttribute("artist", new Artist());
+		return "admin/formNewArtist.html";
+	}
+	
+	@PostMapping("/admin/newArtist")
+	public String newArtist(@Valid @ModelAttribute("artist") Artist artist, BindingResult bindingResult, Model model,
+	        @RequestParam("file") MultipartFile file) throws IOException {
+	    
+		this.artistValidator.validate(artist, bindingResult);
+		
+		if (!bindingResult.hasErrors()) {
+			if (!file.isEmpty()) {
+				Image img = new Image(file.getBytes());
+				this.imageService.save(img);
+				artist.setImage(img);
+			}	
+			this.artistService.addArtist(artist);			
+	    	model.addAttribute("directedMovies", artist.getDirectedMovies());
+	    	model.addAttribute("starredMovies", artist.getStarredMovies());
+			model.addAttribute("artist", artist);
+			return "artist.html";
+		} else {
+			return "admin/formNewArtist.html"; 
+		}
+	}
+	
+	  @GetMapping("/admin/deleteArtist/{id}")
+	  public String deleteArtist(Model model, @PathVariable("id") Long id) {
+		  this.artistService.deleteArtist(id);
+		  model.addAttribute("artists", this.artistService.getAllArtists());
+		  return "artists.html";
+	  }
+		
 }
-

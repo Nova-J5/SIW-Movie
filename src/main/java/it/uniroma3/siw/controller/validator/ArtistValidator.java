@@ -10,6 +10,7 @@ import it.uniroma3.siw.repository.ArtistRepository;
 
 @Component
 public class ArtistValidator implements Validator {
+	
 	@Autowired
 	private ArtistRepository artistRepository;
 

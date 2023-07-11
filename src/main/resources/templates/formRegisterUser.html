@@ -1,114 +1,113 @@
 <!DOCTYPE html>
 <html>
+	<head>
+		<title>Registrazione</title>
+		<div th:replace="fragments/css :: css-dep"></div>
+	    <link rel="stylesheet" href="/css/form_register_user_style.css" />
+	</head>
 
-<head>
-	
-	<title>SiwMovie - Registrazione</title>
-	<meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/css/stile.css" />
-    <link rel="stylesheet" href="/css/form_register_user_style.css" />
-    <link 
-		href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" 
-		rel="stylesheet" 
-		integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" 
-		crossorigin="anonymous">
-	<link
-        href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&family=Sen:wght@400;700;800&display=swap"
-        rel="stylesheet">
-    <link
-     	rel="stylesheet" 
-    	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css">
-    	
-</head>
+	<body>
+		<div th:replace="fragments/navbar :: navbar"></div>
+		
+		<section class="vh-auto" style="background-color: #eee; padding: 2%;" >
+		  <div class="container h-100">
+		    <div class="row d-flex justify-content-center align-items-center h-100">
+		      <div class="col-lg-12 col-xl-11">
+		        <div class="card text-black" style="border-radius: 25px;">
+		          <div class="card-body p-md-5">
+		            <div class="row justify-content-center">
+		              <div class="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1">
+		
+		                <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Registrazione</p>
+		
+		                <form th:action="@{/register}" method="POST" class="mx-1 mx-md-4" enctype="multipart/form-data">
+		
+		                  <div class="d-flex flex-row align-items-center mb-4">
+		                    <i class="fas fa-user fa-lg me-3 fa-fw"></i>
+		                    <div class="form-outline flex-fill mb-0">
+		                      <span><input type="text" placeholder="Nome" id="name" required th:field="${user.name}" class="form-control" /></span>
+							  <span th:if="${#fields.hasErrors('user.name')}" th:errors="${user.name}" class="error-message">
+		                      <label class="form-label" for="name">Nome</label>
+		                    </div>
+		                  </div>
+		                  
+						  <div class="d-flex flex-row align-items-center mb-4">
+		                    <i class="fas fa-user fa-lg me-3 fa-fw"></i>
+		                    <div class="form-outline flex-fill mb-0">
+		                      <span><input type="text" placeholder="Cognome" id="surname" required th:field="${user.surname}" class="form-control" /></span>
+							  <span th:if="${#fields.hasErrors('user.surname')}" th:errors="${user.surname}" class="error-message">
+		                      <label class="form-label" for="surname">Cognome</label>
+		                    </div>
+		                  </div>
+		                  
+						  <div class="d-flex flex-row align-items-center mb-4">
+		                    <i class="fas fa-envelope fa-lg me-3 fa-fw"></i>
+		                    <div class="form-outline flex-fill mb-0">
+		                      <span><input type="text" placeholder="Email" id="email" required th:field="${user.email}" class="form-control" /></span>
+							  <span th:if="${#fields.hasErrors('user.email')}" th:errors="${user.email}" class="error-message">
+		                      <label class="form-label" for="email">Email</label>
+		                    </div>
+		                  </div>
+		                  
+		                  <div class="d-flex flex-row align-items-center mb-4">
+		                    <i class="fas fa-key fa-lg me-3 fa-fw"></i>
+		                    <div class="form-outline flex-fill mb-0">
+		                      <span><input type="text" placeholder="Username" id="username" required th:field="${credentials.username}" class="form-control" /></span>
+							  <span th:if="${#fields.hasErrors('credentials.username')}" th:errors="${credentials.username}" class="error-message">
+		                      <label class="form-label" for="username">Username</label>
+		                    </div>
+		                  </div>
+		                  
+		                  <div class="d-flex flex-row align-items-center mb-4">
+		                    <i class="fas fa-lock fa-lg me-3 fa-fw"></i>
+		                    <div class="form-outline flex-fill mb-0">
+		                      <span><input type="password" placeholder="Password" id="password" required th:field="${credentials.password}" class="form-control" /></span>
+							  <span th:if="${#fields.hasErrors('credentials.password')}" th:errors="${credentials.password}" class="error-message">
+		                      <label class="form-label" for="password">Password</label>
+		                    </div>
+		                  </div>
+		                  
+						  <div class="d-flex flex-row align-items-center mb-4">
+		                    <i class="fas fa-picture fa-lg me-3 fa-fw"></i>
+					         <div class="col-md-6 mb-3">
+					            <label for="image" class="form-label"><b>Foto Profilo:</b></label>
+					            <input type="file" name="file" class="form-control" id="image">
+					            <div class="invalid-feedback" th:if="${#fields.hasErrors('user.image')}" th:errors="*{user.image}"></div>
+					        </div>
+		                  </div>
 
-<body>
-	
-	<nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4">
-	    <div class="container-fluid">
-	        <a href="/">
-	            <img class="logo" src="/images/logo-siw.png" width="22%" alt="logo" />
-	        </a>		    
-	        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-	            <span class="navbar-toggler-icon"></span>
-	        </button>
-	        <div class="collapse navbar-collapse" id="navbarCollapse">
-	            <ul class="navbar-nav me-auto mb-2 mb-md-0">
-	                <li class="nav-item" th:if="${userDetails}">
-	                    <a class="nav-link" href="/user.html">
-	                        <span th:text="${userDetails.username}"></span>
-	                    </a>
-	                </li>
-	                <li class="nav-item" th:if="${userDetails}">
-						<a class="nav-link" href="/logout">Logout</a>
-	                </li>
-	                <li class="nav-item" th:unless="${user}" sec:authorize="!isAuthenticated()">
-	                    <a class="nav-link" href="/login">Login</a>
-	                </li>				
-	                <li class="nav-item">
-	                    <a class="nav-link" href="/movie">Film</a>
-	                </li>
-	                <li class="nav-item">
-	                    <a class="nav-link" href="/artist">Artisti</a>
-	                </li>
-	            </ul>
-	            <form class="d-flex" role="search" th:action="@{/searchMovies}" method="post">
-	                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-	                <button class="btn btn-outline-success" type="submit">Cerca</button>
-	            </form>
-	        </div>
-	    </div>
-	</nav>
-	  
-	<div class="container">
-		<main class="form-signin w-100 m-auto">
-			<form th:action="@{/register}" method="POST" class="registration-form" enctype="multipart/form-data">
-		    	<h1 class="h3 mb-3 fw-normal">Registrazione nuovo utente</h1>
-				<div class="form-floating">
-				  <span><input type="text" class="form-control" id="floatingName" placeholder="Nome" required th:field="${user.name}" /></span>
-				  <span th:if="${#fields.hasErrors('user.name')}" th:errors="${user.name}" class="error-message"></span>
-			      <label for="floatingName"></label>
-			    </div>
-			     <div class="form-floating">
-				  <span><input type="text" class="form-control" id="floatingSurname" placeholder="Surname" required th:field="${user.surname}" /></span>
-				  <span th:if="${#fields.hasErrors('user.surname')}" th:errors="${user.surname}" class="error-message"></span>
-			      <label for="floatingSurname"></label>
-			    </div>
-			     <div class="form-floating">
-				  <span><input type="text" class="form-control" id="floatingEmail" placeholder="Email" required th:field="${user.email}" /></span>
-				  <span th:if="${#fields.hasErrors('user.email')}" th:errors="${user.email}" class="error-message"></span>
-			      <label for="floatingEmail"></label>
-			    </div>
-			    <div class="form-floating">
-				  <span><input type="text" class="form-control" id="floatingUsername" placeholder="Username" required th:field="${credentials.username}" /></span>
-				  <span th:if="${#fields.hasErrors('credentials.username')}" th:errors="${credentials.username}" class="error-message"></span>
-			      <label for="floatingUsername"></label>
-			    </div>
-			    <div class="form-floating">
-				  <span><input type="password" class="form-control" id="floatingPassword" placeholder="Password" required th:field="${credentials.password}" /></span>
-				  <span th:if="${#fields.hasErrors('credentials.password')}" th:errors="${credentials.password}" class="error-message"></span>
-			      <label for="floatingPassword"></label>
-			    <div class="form-floating">
-					<span>
-						<input type="file" class="form-control" name="fileImage" id="floatingImage" placeholder="image" required th:field="${user.photo}" accept="image/png, image/jpeg"/>
-					</span>
-					<span th:if="${#fields.hasErrors('user.photo')}" th:errors="${user.photo}" class="error-message"></span>
-					<label for="floatingImage"></label>
-				</div>
-			    <button class="btn btn-primary w-100 py-2" type="submit">Registrati</button>
-			</form> 
-		</main>
-	</div>
+		                  <div class="form-check d-flex justify-content-center mb-5">
+		                    <input class="form-check-input me-2" type="checkbox" value="" id="form2Example3c" />
+		                    <label class="form-check-label" for="form2Example3">
+		                      Ho letto e accettato i <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">Termini e Condizioni</a>
+		                    </label>
+		                  </div>
+		
+		                  <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
+		                    <button type="submit" class="btn btn-success btn-lg">Registrati</button>
+		                  </div>
+		                  
+  						  <p class="text-center text-muted mt-4 mb-0">Hai già un account? 
+							  <a th:href="@{/login}" class="fw-bold text-body"><u>Accedi</u></a>
+						  </p>
+		
+		                </form>
+		
+		              </div>
+		              
+					  <div class="col-md-10 col-lg-6 col-xl-7 d-flex align-items-center order-1 order-lg-2 justify-content-center text-center">
+		                <img src="https://www.freepnglogos.com/uploads/rick-and-morty-png/rick-and-morty-portal-moon-mod-download-35.png"
+		                  class="img-fluid" width="90%" alt="Sample image">
+		              </div>
+		            </div>
+		          </div>
+		        </div>
+		      </div>
+		    </div>
+		  </div>
+		</section>
+		
+		<div th:replace="fragments/footer :: footer"></div>
 
-
-	
-	<script 
-		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" 
-		integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" 
-		crossorigin="anonymous"></script>
-	
-</body>
-
+	</body>
 </html>
-

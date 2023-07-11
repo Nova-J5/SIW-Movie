@@ -1,25 +1,27 @@
 package it.uniroma3.siw.controller;
 
+import java.io.IOException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import it.uniroma3.siw.model.Credentials;
+import it.uniroma3.siw.model.Image;
 import it.uniroma3.siw.model.User;
 import it.uniroma3.siw.service.CredentialsService;
+import it.uniroma3.siw.service.ImageService;
 import it.uniroma3.siw.service.UserService;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.Valid;
 
 @Controller
 public class AuthenticationController {
@@ -29,71 +31,59 @@ public class AuthenticationController {
 
     @Autowired
 	private UserService userService;
+    
+    @Autowired
+    private ImageService imageService;
 	
-	@GetMapping("/register") 
+    
+	@GetMapping("/formRegisterUser") 
 	public String showRegisterForm (Model model) {
 		model.addAttribute("user", new User());
 		model.addAttribute("credentials", new Credentials());
-		return "formRegisterUser";
+		return "formRegisterUser.html";
 	}
 	
 	@GetMapping("/login") 
 	public String showLoginForm (Model model) {
-		return "formLogin";
+		return "formLogin.html";
 	}
-	
-	@GetMapping("/logout")
-    public String logout(HttpServletRequest request, HttpServletResponse response) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null) {
-            new SecurityContextLogoutHandler().logout(request, response, authentication);
-        }
-        return "redirect:/login?logout";
-    }
-
-	@GetMapping("/") 
-	public String index(Model model) {
+		
+    @GetMapping("/success")
+	public String defaultAfterLogin(Model model) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (authentication instanceof AnonymousAuthenticationToken) {
 	        return "index.html";
 		}
 		else {		
 			UserDetails userDetails = (UserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-			Credentials credentials = credentialsService.getCredentials(userDetails.getUsername());
+			Credentials credentials = credentialsService.getCredentialsByUsername(userDetails.getUsername());
 			if (credentials.getRole().equals(Credentials.ADMIN_ROLE)) {
 				return "admin/indexAdmin.html";
 			}
 		}
         return "index.html";
 	}
-		
-    @GetMapping("/success")
-    public String defaultAfterLogin(Model model) {
-        
-    	UserDetails userDetails = (UserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    	Credentials credentials = credentialsService.getCredentials(userDetails.getUsername());
-    	if (credentials.getRole().equals(Credentials.ADMIN_ROLE)) {
-            return "admin/indexAdmin.html";
-        }
-        return "index.html";
-    }
 
 	@PostMapping("/register")
-    public String registerUser(@Valid @ModelAttribute("user") User user,
-                 BindingResult userBindingResult, @Valid
-                 @ModelAttribute("credentials") Credentials credentials,
-                 BindingResult credentialsBindingResult,
-                 Model model) {
-
-		// se user e credential hanno entrambi contenuti validi, memorizza User e the Credentials nel DB
-        if(!userBindingResult.hasErrors() && !credentialsBindingResult.hasErrors()) {
+	public String registerUser(
+			@ModelAttribute("user") User user, BindingResult userBindingResult,
+            @ModelAttribute("credentials") Credentials credentials, BindingResult credentialsBindingResult,
+            @RequestParam("file") MultipartFile file, Model model) throws IOException {
+		
+		if (!userBindingResult.hasErrors() && !credentialsBindingResult.hasErrors()) {
+			if (!file.isEmpty()) {
+				Image img = new Image(file.getBytes());
+				this.imageService.save(img);
+				user.setImage(img);
+			}	
             userService.addUser(user);
             credentials.setUser(user);
             credentialsService.addCredentials(credentials);
             model.addAttribute("user", user);
-            return "registrationSuccessful";
-        }
-        return "registerUser";
-    }
+			return "formLogin.html";
+		} else {
+			return "formRegisterUser.html"; 
+		}
+	}
 	
 }

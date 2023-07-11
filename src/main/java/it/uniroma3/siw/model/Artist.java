@@ -1,23 +1,17 @@
 package it.uniroma3.siw.model;
 
 import java.time.LocalDate;
-
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
-
 import org.springframework.format.annotation.DateTimeFormat;
-
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.Transient;
+import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.NotBlank;
 
 @Entity
@@ -33,26 +27,27 @@ public class Artist {
     @NotBlank
 	private String surname;
 	
-    @NotBlank
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate dateOfBirth;
     
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate dateOfDeath;
     
-	@Column(nullable = true, length = 64)
-	private String image;
-	
+	@OneToOne
+	private Image image;
+
 	@ManyToMany(mappedBy="actors")
-	private Set<Movie> starredMovies;
+	private List<Movie> starredMovies;
 	
 	@OneToMany(mappedBy="director")
 	private List<Movie> directedMovies;
 	
+	
 	public Artist(){
-		this.starredMovies = new HashSet<>();
+		this.starredMovies = new LinkedList<>();
 		this.directedMovies = new LinkedList<>();
 	}
+	
 	
 	public Long getId() {
 		return id;
@@ -94,26 +89,11 @@ public class Artist {
 		this.dateOfDeath = dateOfDeath;
 	}
 
-	public String getImage() {
-		return image;
-	}
-
-	public void setImage(String image) {
-		this.image = image;
-	}
-	
-	@Transient
-    public String getPhotoImagePath() {
-        if (image == null || id == null) return null;
-         
-        return "/user-photos/" + id + "/" + image;
-    }
-
-	public Set<Movie> getStarredMovies() {
+	public List<Movie> getStarredMovies() {
 		return starredMovies;
 	}
 
-	public void setStarredMovies(Set<Movie> starredMovies) {
+	public void setStarredMovies(List<Movie> starredMovies) {
 		this.starredMovies = starredMovies;
 	}
 
@@ -124,22 +104,15 @@ public class Artist {
 	public void setDirectedMovies(List<Movie> directedMovies) {
 		this.directedMovies = directedMovies;
 	}
-
-	public Set<Movie> getActorOf() {
-		return starredMovies;
+	
+	public Image getImage() {
+		return image;
 	}
 
-	public void setActorOf(Set<Movie> starredMovies) {
-		this.starredMovies = starredMovies;
+	public void setImage(Image image) {
+		this.image = image;
 	}
 
-	public List<Movie> getDirectorOf() {
-		return directedMovies;
-	}
-
-	public void setDirectorOf(List<Movie> directedMovies) {
-		this.directedMovies = directedMovies;
-	}
 
 	@Override
 	public int hashCode() {

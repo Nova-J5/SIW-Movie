@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<title>Film Recensiti</title>
+		<div th:replace="fragments/css :: css-dep"></div>
+	</head>
+
+	<body>
+		<div th:replace="fragments/navbar :: navbar"></div>
+		
+		<div class="container">
+			<div th:if="${reviews == null || reviews.isEmpty()}" class="text-center">
+				<h1>Non ci sono film recensiti dall'utente</h1>
+			</div>
+			<div th:if="${reviews != null && !reviews.isEmpty()}">
+				<div class="mb-4 text-center">
+					<h1><span th:text="'Film recensiti da ' + ${currentUser.name}"></span></h1>
+				</div>
+				<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
+				    <div class="col mb-4" th:each="review : ${reviews}">
+				      <div class="card">
+				        <div class="view overlay">
+						  <a th:href="@{'/movie/' + ${review.movie.id}}">
+							  <div class="mask rgba-white-slight">
+						        <div th:if="${review.movie.image} != null">
+						          <img th:src="@{'/display/image/' + ${review.movie.image.id}}" class="card-img-top"/>
+						        </div>
+							  </div>
+						  </a>
+						  <a th:href="@{'/movie/' + ${review.movie.id}}">
+							  <div class="mask rgba-white-slight">
+						        <div th:if="${review.movie.image} == null">
+						          <img src="https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png" class="card-img-top"/>
+						        </div>
+							  </div>
+						  </a>
+				        </div>
+				        <div class="card-body">
+				          <span th:utext="${review.movie.printStars(review.score)}"></span>
+				          <h4 class="card-title" th:text="${review.title}"></h4>
+				          <p class="card-text" th:text="${review.body}" ></p>
+				        </div>
+				      </div>
+				    </div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

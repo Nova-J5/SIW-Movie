@@ -1,84 +1,236 @@
 <!DOCTYPE html>
 <html>
-	
-<head>
-	
-    <title>Film</title>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/css/stile.css" />
-    <link rel="stylesheet" href="/css/movie_style.css" />
-    <link 
-		href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" 
-		rel="stylesheet" 
-		integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" 
-		crossorigin="anonymous">
-	<link
-        href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&family=Sen:wght@400;700;800&display=swap"
-        rel="stylesheet">
-    <link
-     	rel="stylesheet" 
-    	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css">
-    	
-</head>
+	<head>
+	    <title>Dettagli Film</title>
+	    <div th:replace="fragments/css :: css-dep"></div>
+	    <link rel="stylesheet" href="/css/movie_style.css" />
+	</head>
 
-<body>
+	<body>
+	    <div th:replace="fragments/navbar :: navbar"></div>
 	
-    <nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4">
-	    <div class="container-fluid">
-	        <a href="/">
-	            <img class="logo" src="/images/logo-siw.png" width="22%" alt="logo" />
-	        </a>		    
-	        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-	            <span class="navbar-toggler-icon"></span>
-	        </button>
-	        <div class="collapse navbar-collapse" id="navbarCollapse">
-	            <ul class="navbar-nav me-auto mb-2 mb-md-0">
-	                <li class="nav-item" th:if="${userDetails}">
-	                    <a class="nav-link" href="/user.html">
-	                        <span th:text="${userDetails.username}"></span>
-	                    </a>
-	                </li>
-	                <li class="nav-item" th:if="${userDetails}">
-						<a class="nav-link" href="/logout">Logout</a>
-	                </li>
-	                <li class="nav-item" th:unless="${user}" sec:authorize="!isAuthenticated()">
-	                    <a class="nav-link" href="/login">Login</a>
-	                </li>				
-	                <li class="nav-item">
-	                    <a class="nav-link" href="/movie">Film</a>
-	                </li>
-	                <li class="nav-item">
-	                    <a class="nav-link" href="/artist">Artisti</a>
-	                </li>
-	            </ul>
-	            <form class="d-flex" role="search" th:action="@{/searchMovies}" method="post">
-	                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-	                <button class="btn btn-outline-success" type="submit">Cerca</button>
-	            </form>
+	    <div class="container">
+	        <div class="row">
+	            <div class="col-md-6">
+	                <div class="card mb-3">
+	                    <div th:if="${movie.image} != null">
+	                        <img th:src="@{'/display/image/' + ${movie.image.id}}" width="100%" class="card-img-top" />
+	                    </div>
+	                    <div th:if="${movie.image} == null">
+	                        <img src="https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png"
+	                            width="100%" class="card-img-top" />
+	                    </div>
+	                    <div class="card-body">
+	                        <h1 class="card-title" th:text="${movie.title}"></h1>
+	                        <p class="card-text">Regista: 
+								<b>
+									<a class="text-black text-decoration-none" th:href="@{'/artist/' + ${movie.director.id}}">
+										<b><span th:text="${movie.director.name} + ' ' + ${movie.director.surname}"></span></b>
+									</a>
+								</b>
+							</p>
+	                        <p class="card-text">Anno di uscita: <b><span th:text="${movie.year}"></span></b></p>
+							<p class="card-text" th:text="${movie.description}"></p>
+	                    </div>
+	                </div>
+	            </div>
+	            <div class="col-md-6">
+					<div th:if="${currentUser != null && currentUser.isAdmin()}">
+						<a th:href="@{'/admin/formUpdateMovie/' + ${movie.id}}" >Modifca dati film</a><br>
+					</div>
+	                <div class="row">
+	                    <div class="row">
+		                    <h1 class="strong mt-3 mb-2">
+		                        Regista
+		                    </h1>
+	                        <div class="card" style="border-radius: 15px;">
+	                            <div class="card-body p-4">
+	                                <div class="d-flex text-black">
+										<a th:href="@{'/artist/' + ${movie.director.id}}">
+		                                    <div class="flex-shrink-0" th:if="${movie.director.image} != null">
+		                                        <img th:src="@{'/display/image/' + ${movie.director.image.id}}"
+		                                            alt="Regista" class="img-fluid"
+		                                            style="width: 180px; border-radius: 10px;">
+		                                    </div>	
+										</a>
+	                                    <a th:href="@{'/artist/' + ${movie.director.id}}">
+		                                    <div class="flex-shrink-0" th:if="${movie.director.image} == null">
+		                                        <img src="https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png"
+		                                            alt="Regista non disponibile" class="img-fluid"
+		                                            style="width: 180px; border-radius: 10px;">
+		                                    </div>	
+										</a>
+	                                    <div class="flex-grow-1 ms-3">
+	                                        <h5 class="mb-1"
+	                                            th:text="${movie.director.name} + ' ' + ${movie.director.surname}">
+	                                        </h5>
+	                                        <div th:if="${movie.director.dateOfDeath} == null" class="mb-2 pb-1"
+	                                            style="color: #2b2a2a;">
+	                                            <span
+	                                                th:text="'Data di nascita: ' + ${movie.director.dateOfBirth}"></span>
+	                                        </div>
+	                                        <div th:if="${movie.director.dateOfDeath} != null" class="mb-2 pb-1"
+	                                            style="color: #2b2a2a;">
+	                                            <span
+	                                                th:text="${movie.director.dateOfBirth} + ' - ' + ${movie.director.dateOfDeath}"></span>
+	                                        </div>
+	                                        <ul th:if="${movie.director.directedMovies == null || movie.director.directedMovies.isEmpty()}">
+												<li th:each="movie : ${movie.director.directedMovies}">
+													<a th:href="@{'/movie/' + ${movie.id}}">
+														<span th:text="${movie.title}"></span>
+													</a>
+												</li>
+											</ul>
+	                                    </div>
+	                                </div>
+	                            </div>
+	                        </div>
+	                    </div>
+	                    <div class="row">
+	                        <div class="h3 text-center mt-3" th:if="${movie.actors == null || movie.actors.isEmpty()}">
+	                            Nessun attore ha recitato in questo film
+	                        </div>
+	                        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3" th:if="${!movie.actors.isEmpty()}">
+		                        <div class="row">
+			                        <h1 class="mt-3 mb-1">
+			                            Attori
+			                        </h1>
+								</div>
+								<div class"row">
+		                            <div class="col" th:each="artist : ${movie.actors}">
+		                                <div class="card h-100">
+											<a th:href="@{'/artist/' + ${artist.id}}">
+			                                    <div th:if="${artist.image} != null">
+			                                        <img th:src="@{'/display/image/' + ${artist.image.id}}"
+			                                            class="card-img-top" />
+			                                    </div>
+											</a>
+											<a th:href="@{'/artist/' + ${artist.id}}">
+			                                    <div th:if="${artist.image} == null">
+			                                        <img src="https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png"
+			                                            class="card-img-top" />
+			                                    </div>	
+											</a>
+		                                    <div class="card-body">
+		                                        <h5 class="card-title" th:text="${artist.name} + ' ' + ${artist.surname}"></h5>
+		                                        <div th:if="${artist.dateOfDeath} == null">
+		                                            <span class="card-text" th:text="'Data di nascita: ' + ${artist.dateOfBirth}"></span>
+		                                        </div>
+		                                        <div th:if="${artist.dateOfDeath} != null">
+		                                            <span class="card-text"
+		                                                th:text="${artist.dateOfBirth} + ' - ' + ${artist.dateOfDeath}"></span>
+		                                        </div>
+		                                    </div>
+		                                </div>
+		                            </div>
+								</div>
+	                        </div>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+	
+	        <div class="row mt-3">
+				
+	            <div class="col-md-6">
+	                <div class="card" th:if="${reviews != null && !reviews.isEmpty()}">
+	                    <div class="card-body">
+	                        <h3 class="card-title mt-3">Recensioni:</h3>
+	                        <div th:if="${!reviews.isEmpty()}" class="container my-5 py-5">
+	                            <div class="row d-flex justify-content-center">
+	                                <div class="col-md-12">
+	                                    <div class="card">
+	                                        <div class="card-body px-4 py-5">
+	                                            <div id="carouselDarkVariant" class="carousel slide carousel-dark"
+	                                                data-mdb-ride="carousel">
+	                                                <div class="carousel-inner pb-5" th:each="review : ${reviews}">
+	                                                    <div class="carousel-item active">
+	                                                        <div class="row d-flex justify-content-center">
+	                                                            <div class="col-lg-4 d-flex justify-content-center">
+	                                                                <img th:if="${review.user.image} != null"
+	                                                                    th:src="@{'/display/image/' + ${review.user.image.id}}"
+	                                                                    class="rounded-circle shadow-1 mb-4 mb-lg-0"
+	                                                                    alt="avatar" width="150" height="150" />
+	                                                                <img th:if="${review.user.image} == null"
+	                                                                    src="https://cdn.pixabay.com/photo/2012/04/26/19/43/profile-42914_1280.png"
+	                                                                    class="rounded-circle shadow-1 mb-4 mb-lg-0"
+	                                                                    alt="avatar" width="150" height="150" />
+	                                                            </div>
+	                                                            <div class="col-lg-8 text-center text-lg-start mx-auto mx-lg-0">
+	                                                                <h4 class="mb-4">
+	                                                                    <span
+	                                                                        th:text="${review.user.name} + ' ' + ${review.user.surname} + ' [@' + ${review.user.credentials.username} + ']'"></span>
+	                                                                </h4>
+	                                                                <p class="mb-0 pb-3">
+	                                                                    <span th:text="${review.body}"></span>
+	                                                                </p>
+	                                                            </div>
+	                                                        </div>
+	                                                    </div>
+	                                                </div>
+	                                                <button class="carousel-control-prev" type="button"
+	                                                    data-mdb-target="#carouselDarkVariant" data-mdb-slide="prev">
+	                                                    <span class="carousel-control-prev-icon"
+	                                                        aria-hidden="true"></span>
+	                                                    <span class="visually-hidden">Previous</span>
+	                                                </button>
+	                                                <button class="carousel-control-next" type="button"
+	                                                    data-mdb-target="#carouselDarkVariant" data-mdb-slide="next">
+	                                                    <span class="carousel-control-next-icon"
+	                                                        aria-hidden="true"></span>
+	                                                    <span class="visually-hidden">Next</span>
+	                                                </button>
+	                                            </div>
+	                                        </div>
+	                                    </div>
+	                                </div>
+	                            </div>
+	                        </div>
+	                    </div>
+	                </div>
+	            </div>
+	            
+	            <div class="col-md-6">
+	                <form class="adminForm rounded-2"
+	                    th:action="@{'/newReview/' + ${movie.id} + '/' + ${currentUser.id}}" method="POST"
+	                    th:object="${review}">
+	                    <label class="form-label" th:if="${#fields.hasErrors('title')}"
+	                        th:errors="*{title}"></label>
+	                    <div class="input-group">
+							<div class="input-group-prepend">
+	                        	<span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-heading"></i></span>
+							</div>
+	                        <input required th:field="${review.title}" id="titolo" type="text" class="form-control"
+	                            placeholder="Titolo" aria-label="titolo" aria-describedby="basic-addon1">
+	                    </div>
+	                    <label class="form-label" th:if="${#fields.hasErrors('score')}"
+	                        th:errors="*{score}"></label>
+	                    <div class="input-group">
+							<div class="input-group-prepend">
+	                        	<span class="input-group-text" id="basic-addon2"><i class="fa-solid fa-star"></i></span>
+							</div>
+	                        <input required type="number" th:field="${review.score}" id="voto" min="1" max="5"
+	                            class="form-control" placeholder="Voto" aria-label="voto" aria-describedby="basic-addon2">
+	                    </div>
+	                    <label class="form-label" th:if="${#fields.hasErrors('body')}"
+	                        th:errors="*{body}"></label>
+	                    <div class="input-group mb-3">
+							<div class="input-group-prepend">
+	                        	<span class="input-group-text" id="basic-addon3"><i class="fa-sharp fa-solid fa-text-size"></i></span>
+							</div>
+	                        <input required th:field="${review.body}" id="testo" type="text" class="form-control"
+	                            placeholder="Perché ti è piaciuto questo film?" rows="5" aria-label="testo"
+	                            aria-describedby="basic-addon3">
+	                    </div>
+	                    <div class="text-center">
+	                        <button class="btn btn-success" type="submit">Conferma</button>
+	                    </div>
+	                </form>
+	            </div>
+	            
 	        </div>
 	    </div>
-	</nav>
-
-	<div class="container">
-		<h1>Dettagli Film</h1>
-    	<div class="movie-details" th:if="${movie}">
-        	<span class="movie-title" th:text="${movie.title}">Up!</span>
-        	<span class="movie-year" th:text="'(' + ${movie.year} + ')'">2000</span>
-        	<span>
-				<img th:src="/@{${movie.photosImagePath}}" />
-			</span>
-    	</div>
-    	<div class="no-movie" th:unless="${movie}">Non esiste</div>
-	</div>
-    
-
-<script 
-	src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" 
-	integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" 
-	crossorigin="anonymous"></script>
-
-</body>
-
+	
+	</body>
 </html>
+

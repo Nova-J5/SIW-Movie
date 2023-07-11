@@ -1,6 +1,7 @@
 package it.uniroma3.siw.model;
 
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -8,8 +9,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotBlank;
 
 @Entity
@@ -22,17 +23,35 @@ public class User {
 
 	@NotBlank
 	private String name;
+	
 	@NotBlank
 	private String surname;
 	
     @Column(unique=true, nullable=false)
 	private String email;
     
-    @Column(nullable = true, length = 64)
-    private String photo;
+    @OneToOne
+    private Image image;
     
-    @OneToMany
-    private Set<Review> reviews;
+    @OneToMany(mappedBy = "user")
+    private List<Review> reviews;
+    
+	@OneToOne(mappedBy="user")
+	private Credentials credentials;
+    
+    
+	public User() {
+		this.reviews = new ArrayList<>();
+	}
+    
+	
+	public boolean isAdmin() {
+		return this.getCredentials().getRole().equals(Credentials.ADMIN_ROLE);
+	}
+	
+	public boolean isAuth() {
+		return this.getCredentials().getRole().equals(Credentials.ADMIN_ROLE) || this.getCredentials().getRole().equals(Credentials.DEFAULT_ROLE);
+	}
 
     public Long getId() {
 		return id;
@@ -65,22 +84,33 @@ public class User {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-
-	public String getPhoto() {
-		return photo;
-	}
-
-	public void setPhoto(String photo) {
-		this.photo = photo;
-	}
-
-	@Transient
-    public String getPhotosImagePath() {
-        if (photo == null || id == null) return null;
-         
-        return "/user-photo/" + id + "/" + photo;
-    }
 	
+	public Image getImage() {
+		return image;
+	}
+
+	public void setImage(Image image) {
+		this.image = image;
+	}
+
+	public List<Review> getReviews() {
+		return reviews;
+	}
+
+	public void setReviews(List<Review> reviews) {
+		this.reviews = reviews;
+	}
+
+	public Credentials getCredentials() {
+		return credentials;
+	}
+
+
+	public void setCredentials(Credentials credentials) {
+		this.credentials = credentials;
+	}
+
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

@@ -1,10 +1,8 @@
 package it.uniroma3.siw.model;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
-
-import java.util.Set;
-
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -12,11 +10,12 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.Transient;
+import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 @Entity
 public class Movie {
@@ -33,19 +32,42 @@ public class Movie {
         @Max(2023)
         private Integer year;
         
-        @Column(nullable = true, length = 64)
-        private String image;
+        @Size(max = 2000)
+        private String description;
         
         @ManyToOne
         private Artist director;
         
         @ManyToMany
-        private Set<Artist> actors;
+        private List<Artist> actors;
         
-        @OneToMany(mappedBy="movie")
-        private Set<Review> reviews;
-    
-        public Long getId() {
+        @OneToMany(mappedBy = "movie")
+        private List<Review> reviews;
+        
+    	@OneToOne
+    	private Image image;
+    	
+    	
+    	public Movie() {
+    		this.actors = new ArrayList<>();
+    		this.reviews = new ArrayList<>();
+    	}
+    	
+    	
+    	public String printStars(int score) {
+    		String s = "";
+    		for(int i=0; i<score; i++) {
+    			if (i==0)
+    				s="&#9733";
+    			else
+    				s = s + "&#9733";
+    		}
+    		for(int i=score; i<5; i++)
+    			s = s + "&#9734" ;
+    		return s;
+    	}
+
+		public Long getId() {
             return id;
         }
     
@@ -68,22 +90,23 @@ public class Movie {
             this.year = year;
         }
         
-        public String getImage() {
-            return image;
-        }
+		public String getDescription() {
+			return description;
+		}
+
+		public void setDescription(String description) {
+			this.description = description;
+		}
     
-        public void setImage(String image) {
-            this.image = image;
-        }
-        
-        @Transient
-        public String getPhotoImagePath() {
-            if (image == null || id == null) return null;
-             
-            return "/user-photos/" + id + "/" + image;
-        }
-    
-        public Artist getDirector() {
+        public Image getImage() {
+			return image;
+		}
+
+		public void setImage(Image image) {
+			this.image = image;
+		}
+
+		public Artist getDirector() {
             return director;
         }
     
@@ -91,13 +114,21 @@ public class Movie {
             this.director = director;
         }
     
-        public Set<Artist> getActors() {
+        public List<Artist> getActors() {
             return actors;
         }
     
-        public void setActors(Set<Artist> actors) {
+        public void setActors(List<Artist> actors) {
             this.actors = actors;
         }
+        
+        public List<Review> getReviews() {
+			return reviews;
+		}
+
+		public void setReviews(List<Review> reviews) {
+			this.reviews = reviews;
+		}
     
         @Override
         public int hashCode() {

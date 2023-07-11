@@ -7,6 +7,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
 import it.uniroma3.siw.model.Artist;
+import it.uniroma3.siw.model.Movie;
 
 public interface ArtistRepository extends CrudRepository<Artist, Long> {
 
@@ -21,5 +22,9 @@ public interface ArtistRepository extends CrudRepository<Artist, Long> {
 	public Iterable<Artist> findActorsNotInMovie(@Param("movieId") Long id);
 	
 	public List<Artist> findBySurname(String surname);
+	
+	public Artist findByDirectedMovies(Movie movie);
+	
+	public List<Artist> findByStarredMovies(Movie movie);
 
 }

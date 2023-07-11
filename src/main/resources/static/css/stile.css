@@ -4,6 +4,8 @@
 
   body {
     font-family: "Roboto", sans-serif;
+    height: calc(100vh - 100px);
+
   }
 
   a {

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+	
+<head>
+	<meta charset="UTF-8">
+	<title>Navbar fragment</title>
+</head>
+	<th:block th:fragment="navbar">
+		
+		<nav class="navbar navbar-expand-md navbar-light" style="background-color: #92C67D;">
+		    <div class="container-fluid">
+		        <a href="/">
+		            <img class="logo" src="https://cdn-icons-png.flaticon.com/128/83/83519.png" width="40%" alt="logo" />
+		        </a>		    
+		        <div class="collapse navbar-collapse" id="navbarCollapse">
+					<form class="d-flex justify-content-center" style="width: 30%;" role="search" th:action="@{/searchMovies}" method="post">
+                		<input class="form-control me-2" type="text" name="str" placeholder="Cerca film per nome o anno di uscita" aria-label="Search">
+                		<button class="btn btn-outline-success" type="submit">
+ 							<i class="fas fa-search"></i>						
+  						</button>
+            		</form>
+            		<ul class="navbar-nav ms-auto mb-2 mb-md-0">
+		                <li class="nav-item">
+		                    <a class="nav-link" href="/movies">Film</a>
+		                </li>
+		                <li class="nav-item">
+		                    <a class="nav-link" href="/artists">Artisti</a>
+		                </li> 
+						<li class="dropdown" th:if="${userDetails}">
+						  <button
+						    class="btn btn-primary dropdown-toggle"
+						    type="button"
+						    id="dropdownMenuButton"
+						    data-toggle="dropdown"
+						    aria-expanded="false">
+						    <i class="fas fa-user"></i>
+						    <b><span th:text="${userDetails.username}"></span></b>
+						  </button>
+						  <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+						    <li><a class="dropdown-item" th:href="@{'/user' + '/' + ${currentUser.id}}"><i class="fas fa-user-circle"></i> Profilo</a></li>
+						    <li><a class="dropdown-item" href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+						  </ul>
+						</li>
+						<li th:if="!${userDetails}">
+							<a class="btn btn-primary" href="/login" role="button">
+								<i class="fa-solid fa-right-to-bracket"></i>
+								<b>Login</b>
+							</a>
+						</li>
+		            </ul>
+		        </div>
+		    </div>
+		</nav>
+	</th:block>
+</html>
