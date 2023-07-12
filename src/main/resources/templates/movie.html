@@ -140,7 +140,7 @@
 	                            <div class="row d-flex justify-content-center">
 	                                <div class="col-md-12">
 	                                    <div class="card">
-	                                        <div class="card-body px-4 py-5">
+	                                         <div class="card-body px-4 py-5">
 	                                            <div id="carouselDarkVariant" class="carousel slide carousel-dark"
 	                                                data-mdb-ride="carousel">
 	                                                <div class="carousel-inner pb-5" th:each="review : ${reviews}">
@@ -230,7 +230,8 @@
 	            
 	        </div>
 	    </div>
-	
+	    
+		<div th:replace="fragments/footer :: footer"></div>
 	</body>
 </html>
 

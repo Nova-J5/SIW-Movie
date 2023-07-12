@@ -1,7 +1,7 @@
 package it.uniroma3.siw.controller;
 
 import java.io.IOException;
-
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import it.uniroma3.siw.model.Image;
+import it.uniroma3.siw.model.Review;
 import it.uniroma3.siw.model.User;
 import it.uniroma3.siw.service.ImageService;
 import it.uniroma3.siw.service.ReviewService;
@@ -31,14 +32,33 @@ public class UserController {
 	@Autowired
 	private ImageService imageService;
 	
-
-	
 	
 	@GetMapping("user/{id}")
 	private String getUser(@PathVariable("id") Long id, Model model) {
 		User user = this.userService.findUserById(id);
 		model.addAttribute("user", user);
-		model.addAttribute("reviews", this.reviewService.getReviewsByUser(user));
+		List<Review> reviews = this.reviewService.getReviewsByUser(user);
+		model.addAttribute("reviews", reviews);
+		if (!reviews.isEmpty()) {
+		    int maxElements = Math.min(4, reviews.size());
+		    for (int i = 0; i < maxElements; i++) {
+		        if (reviews.get(i) != null) {
+		            String attributeName;
+		            
+		            if (i == 1) {
+		                attributeName = "secondReviewed";
+		            } else if (i == 2) {
+		                attributeName = "thirdReviewed";
+		            } else if (i == 3) {
+		                attributeName = "fourthReviewed";
+		            } else {
+		                attributeName = "firstReviewed";
+		            }
+		            
+		            model.addAttribute(attributeName, reviews.get(i));
+		        }
+		    }
+		}
 		
 		return "user.html";
 	}

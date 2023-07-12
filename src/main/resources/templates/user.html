@@ -10,7 +10,7 @@
 		<div th:replace="fragments/navbar :: navbar"></div>
 		
 			
-		<!-- Profile widget -->
+		<!-- Inizio profilo -->
 		<div class="bg-white shadow rounded overflow-hidden">
 		    <div class="px-4 pt-0 pb-4 bg-white">
 		        <div class="media align-items-end profile-header">
@@ -41,23 +41,49 @@
 		        </ul>
 		    </div>
 		
-		    <div class="py-4 px-4">
-		        <div class="d-flex align-items-center justify-content-between mb-3">
-		            <h5 class="mb-0">Film recensiti</h5>
-		            <a th:href="@{'/reviews/' + ${user.id}}" class="btn btn-link text-muted">Mostra tutti</a>
-		        </div>
-		        <div class="row">
-		            <div class="col-lg-6 mb-2 pr-lg-1"><img src="https://bootstrapious.com/i/snippets/sn-profile/img-3.jpg"
-		                    alt="" class="img-fluid rounded shadow-sm"></div>
-		            <div class="col-lg-6 mb-2 pl-lg-1"><img src="https://bootstrapious.com/i/snippets/sn-profile/img-4.jpg"
-		                    alt="" class="img-fluid rounded shadow-sm"></div>
-		            <div class="col-lg-6 pr-lg-1 mb-2"><img src="https://bootstrapious.com/i/snippets/sn-profile/img-5.jpg"
-		                    alt="" class="img-fluid rounded shadow-sm"></div>
-		            <div class="col-lg-6 pl-lg-1"><img src="https://bootstrapious.com/i/snippets/sn-profile/img-6.jpg" alt=""
-		                    class="img-fluid rounded shadow-sm"></div>
-		        </div>
-		    </div>
-		</div><!-- End profile widget -->
+			<div class="card-body p-4 text-black">
+			    <div class="d-flex justify-content-between align-items-center mb-4">
+			        <p class="lead fw-normal mb-0">Film recensiti</p>
+			        <p class="mb-0"><a th:href="@{'/reviews/' + ${user.id}}" class="text-muted">Mostra tutti</a></p>
+			    </div>
+			    <div class="row g-2">
+			        <div class="col mb-2" th:if="${firstReviewed}">
+			            <div th:if="${firstReviewed.movie.image} != null">
+			                <img th:src="@{'/display/image/' + ${firstReviewed.movie.image.id}}" class="w-100 rounded-3" />
+			            </div>
+			            <div th:if="${firstReviewed.movie.image} == null">
+			                <img src="/images/image-not-available.jpeg" class="w-100 rounded-3" />
+			            </div>
+			        </div>
+			        <div class="col mb-2" th:if="${secondReviewed}">
+			            <div th:if="${secondReviewed.movie.image} != null">
+			                <img th:src="@{'/display/image/' + ${secondReviewed.movie.image.id}}" class="w-100 rounded-3" />
+			            </div>
+			            <div th:if="${secondReviewed.movie.image} == null">
+			                <img src="/images/image-not-available.jpeg" class="w-100 rounded-3" />
+			            </div>
+			        </div>
+			    </div>
+			    <div class="row g-2">
+			        <div class="col" th:if="${thirdReviewed}">
+			            <div th:if="${thirdReviewed.movie.image} != null">
+			                <img th:src="@{'/display/image/' + ${thirdReviewed.movie.image.id}}" class="w-100 rounded-3" />
+			            </div>
+			            <div th:if="${thirdReviewed.movie.image} == null">
+			                <img src="/images/image-not-available.jpeg" class="w-100 rounded-3" />
+			            </div>
+			        </div>
+			        <div class="col" th:if="${fourthReviewed}">
+			            <div th:if="${fourthReviewed.movie.image} != null">
+			                <img th:src="@{'/display/image/' + ${fourthReviewed.movie.image.id}}" class="w-100 rounded-3" />
+			            </div>
+			            <div th:if="${fourthReviewed.movie.image} == null">
+			                <img src="/images/image-not-available.jpeg" class="w-100 rounded-3" />
+			            </div>
+			        </div>
+			    </div>
+			</div>
+		</div><!-- Fine profilo -->
 	    
 		<div th:replace="fragments/footer :: footer"></div>
 	</body>
