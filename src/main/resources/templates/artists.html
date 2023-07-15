@@ -16,16 +16,16 @@
 			<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3"  th:if="${!artists.isEmpty()}">
 			  <div class="col" th:each="artist : ${artists}">
 			    <div class="card h-100">
-				  <div th:if="${artist.image} != null">
-						<img th:src="@{'/display/image/' + ${artist.image.id}}" class="card-img-top"/>
-				  </div>
-				  <div th:if="${artist.image} == null">
-						<img src="https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png" class="card-img-top"/>
-				  </div>
-			      <div class="card-body">
-					<a th:href="@{'/artist/' + ${artist.id}}">   
-						<h5 class="card-title" th:text="${artist.name} + ' ' + ${artist.surname}"></h5>
+					<a th:href="@{'/artist/' + ${artist.id}}">
+					  <div th:if="${artist.image} != null">
+							<img th:src="@{'/display/image/' + ${artist.image.id}}" class="card-img-top"/>
+					  </div>
+					  <div th:if="${artist.image} == null">
+							<img src="https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png" class="card-img-top"/>
+					  </div>
 					</a>
+			      <div class="card-body">
+					<h5 class="card-title" th:text="${artist.name} + ' ' + ${artist.surname}"></h5>
 					<div th:if="${artist.dateOfDeath} == null">
 						<span class="card-text" th:text="'Data di nascita: ' + ${artist.dateOfBirth}"></span>
 					</div>
@@ -37,5 +37,7 @@
 			  </div>
 			</div>
 		</div>
+		
+		<div th:replace="fragments/footer :: footer"></div>
 	</body>
 </html>

@@ -1,9 +1,11 @@
 package it.uniroma3.siw.controller;
 
 import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -18,7 +20,9 @@ import it.uniroma3.siw.model.Artist;
 import it.uniroma3.siw.model.Image;
 import it.uniroma3.siw.model.Movie;
 import it.uniroma3.siw.model.Review;
+import it.uniroma3.siw.model.User;
 import it.uniroma3.siw.service.ArtistService;
+import it.uniroma3.siw.service.CredentialsService;
 import it.uniroma3.siw.service.ImageService;
 import it.uniroma3.siw.service.MovieService;
 import it.uniroma3.siw.service.ReviewService;
@@ -42,16 +46,43 @@ public class MovieController {
 	@Autowired
 	private MovieValidator movieValidator;
 	
+	@Autowired
+	private GlobalController globalController;
+	
+	@Autowired
+	private CredentialsService credentialsService;
+	
 	
 	/* OPERAZIONI PER TUTTI I TIPI DI UTENTE */
 	
 	@GetMapping("/movie/{id}")
 	public String getMovie(@PathVariable("id") Long id, Model model) {
+		
 		Movie movie = this.movieService.getMovie(id);
 	    model.addAttribute("movie", movie);
-		Review review = new Review();
-		model.addAttribute("review", review);
-		model.addAttribute("reviews", this.reviewService.getReviewsByMovie(movie));
+		Review newReview = new Review();
+		model.addAttribute("newReview", newReview);
+		List<Review> reviews = this.reviewService.getReviewsByMovie(movie);
+		if(!reviews.isEmpty())
+		{
+			Review reviewActive = reviews.get(0);
+			model.addAttribute("reviewActive", reviewActive);
+			reviews.remove(reviewActive);
+		}
+	
+		UserDetails userDetails = this.globalController.getUser();
+		if( userDetails == null) {
+			model.addAttribute("userReview", null);
+		}
+		else {
+			User user = this.credentialsService.getCredentialsByUsername(userDetails.getUsername()).getUser();
+			Review userReview = reviewService.getReviewByMovieAndUser(user, movie);
+			  	
+			model.addAttribute("userReview", userReview);
+			reviews.remove(userReview);
+		}
+		
+		model.addAttribute("reviews", reviews);
 	    return "movie.html";
 	}
 

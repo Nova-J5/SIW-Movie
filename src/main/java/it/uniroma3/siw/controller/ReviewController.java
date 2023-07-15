@@ -6,6 +6,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import it.uniroma3.siw.controller.validator.ReviewValidator;
 import it.uniroma3.siw.model.Movie;
 import it.uniroma3.siw.model.Review;
 import it.uniroma3.siw.model.User;
@@ -33,6 +35,9 @@ public class ReviewController {
 	@Autowired
 	private CredentialsService credentialsService;
 	
+	@Autowired
+	private ReviewValidator reviewValidator;
+	
 	
 	@GetMapping("/reviews/{id}")
 	private String getReviewedMovies(@PathVariable("id") Long id, Model model) {
@@ -50,15 +55,22 @@ public class ReviewController {
 		Movie movie = this.movieService.getMovie(movieId);
 		User user = this.userService.findUserById(userId);
 		
-		this.reviewService.setMovieAndUser(review, user, movie);
-		
-		user.getReviews().add(review);
-		movie.getReviews().add(review);
+		this.reviewValidator.validate(review, bindingResult);
+		if(!bindingResult.hasErrors()) {
 			
-		this.movieService.addMovie(movie);
-		this.userService.addUser(user);
-		this.reviewService.addReview(review);
-		return "redirect:/movie/" + movieId;
+			this.reviewService.setMovieAndUser(review, user, movie);
+			
+			user.getReviews().add(review);
+			movie.getReviews().add(review);
+				
+			this.movieService.addMovie(movie);
+			this.userService.addUser(user);
+			this.reviewService.addReview(review);
+			return "redirect:/movie/" + movieId;
+		}
+		else {
+			return "reviewError.html";
+		}
 	 }
     
 	 @PostMapping("/updateReview/{id}")
@@ -77,18 +89,16 @@ public class ReviewController {
 		 return "redirect:/movie/" + movie.getId();
 	 }
 	 
-	 @GetMapping("/deleteReview/{reviewId}/{movieId}")
-	 public String deleteReview(Model model, @PathVariable("reviewId") Long reviewId, @PathVariable("movieId") Long movieId) {
+	 @GetMapping("/deleteReview/{reviewId}")
+	 public String deleteReview(Model model, @PathVariable("reviewId") Long reviewId) {
 		 User user = this.credentialsService.getCredentialsByUsername(globalController.getUser().getUsername()).getUser();
 		 Review review = this.reviewService.getReview(reviewId);
 		 Movie movie = review.getMovie();
 		 
-		 this.reviewService.deleteReview(reviewId, movieId, user);
+		 this.reviewService.deleteReview(reviewId, movie.getId(), user);
 		 this.movieService.addMovie(movie);
-		 model.addAttribute("movie", movie);
-		 model.addAttribute("newReview", new Review());
-		 model.addAttribute("reviews", movie.getReviews());
-		 return "redirect:/movie/" + movieId;
+
+		 return "redirect:/movie/" + movie.getId();
 	 }
     
 }

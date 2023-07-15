@@ -32,7 +32,7 @@ public class Movie {
         @Max(2023)
         private Integer year;
         
-        @Size(max = 2000)
+        @Size(max = 4000)
         private String description;
         
         @ManyToOne

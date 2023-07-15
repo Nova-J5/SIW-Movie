@@ -12,17 +12,15 @@
 			
 		<!-- Inizio profilo -->
 		<div class="bg-white shadow rounded overflow-hidden">
-		    <div class="px-4 pt-0 pb-4 bg-white">
+		    <div class="justify-content-center text-center px-4 pt-0 pb-4 bg-white">
 		        <div class="media align-items-end profile-header">
 		            <div class="profile mt-3 mr-3">
-		                <div th:if="${user.image} != null" class="avatar">
-		                    <img th:src="@{'/display/image/' + ${user.image.id}}" width="20%" alt="..."
-		                        class="rounded mb-2 img-thumbnail">
-		                </div>
-		                <div th:if="${user.image} == null" class="avatar">
-		                    <img src="https://cdn.pixabay.com/photo/2012/04/26/19/43/profile-42914_1280.png" width="20%" alt="..."
-		                        class="rounded mb-2 img-thumbnail">
-		                </div>
+						<div th:if="${user.image} != null">
+							<img th:src="@{'/display/image/' + ${user.image.id}}" class="rounded-cicle img-thumbnail mt-5 mb-2" style="border-radius: 100%; height: 300px; width: 300px; z-index: 1">
+						</div>
+						<div th:if="${user.image} == null">
+							<img src="https://cdn.pixabay.com/photo/2012/04/26/19/43/profile-42914_1280.png" class="rounded-circle img-thumbnail mt-5 mb-2" style="border-radius: 100%; height: 150px; width: 150px; z-index: 1">
+						</div>
 		                <a th:href="@{'/formUpdateUser/' + ${user.id}}" class="btn btn-dark btn-sm btn-block">Modifica profilo</a>
 		            </div>
 		            <div class="media-body mb-5 text-black">
@@ -49,36 +47,36 @@
 			    <div class="row g-2">
 			        <div class="col mb-2" th:if="${firstReviewed}">
 			            <div th:if="${firstReviewed.movie.image} != null">
-			                <img th:src="@{'/display/image/' + ${firstReviewed.movie.image.id}}" class="w-100 rounded-3" />
+			                <img th:src="@{'/display/image/' + ${firstReviewed.movie.image.id}}" class="rounded-3" />
 			            </div>
 			            <div th:if="${firstReviewed.movie.image} == null">
-			                <img src="/images/image-not-available.jpeg" class="w-100 rounded-3" />
+			                <img src="/images/image-not-available.jpeg" class="rounded-3" />
 			            </div>
 			        </div>
 			        <div class="col mb-2" th:if="${secondReviewed}">
 			            <div th:if="${secondReviewed.movie.image} != null">
-			                <img th:src="@{'/display/image/' + ${secondReviewed.movie.image.id}}" class="w-100 rounded-3" />
+			                <img th:src="@{'/display/image/' + ${secondReviewed.movie.image.id}}" class="rounded-3" />
 			            </div>
 			            <div th:if="${secondReviewed.movie.image} == null">
-			                <img src="/images/image-not-available.jpeg" class="w-100 rounded-3" />
+			                <img src="/images/image-not-available.jpeg" class="rounded-3" />
 			            </div>
 			        </div>
 			    </div>
 			    <div class="row g-2">
 			        <div class="col" th:if="${thirdReviewed}">
 			            <div th:if="${thirdReviewed.movie.image} != null">
-			                <img th:src="@{'/display/image/' + ${thirdReviewed.movie.image.id}}" class="w-100 rounded-3" />
+			                <img th:src="@{'/display/image/' + ${thirdReviewed.movie.image.id}}" class="rounded-3" />
 			            </div>
 			            <div th:if="${thirdReviewed.movie.image} == null">
-			                <img src="/images/image-not-available.jpeg" class="w-100 rounded-3" />
+			                <img src="/images/image-not-available.jpeg" class="rounded-3" />
 			            </div>
 			        </div>
 			        <div class="col" th:if="${fourthReviewed}">
 			            <div th:if="${fourthReviewed.movie.image} != null">
-			                <img th:src="@{'/display/image/' + ${fourthReviewed.movie.image.id}}" class="w-100 rounded-3" />
+			                <img th:src="@{'/display/image/' + ${fourthReviewed.movie.image.id}}" class="rounded-3" />
 			            </div>
 			            <div th:if="${fourthReviewed.movie.image} == null">
-			                <img src="/images/image-not-available.jpeg" class="w-100 rounded-3" />
+			                <img src="/images/image-not-available.jpeg" class="rounded-3" />
 			            </div>
 			        </div>
 			    </div>

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Dettagli Artista</title>
+		<title>Artista</title>
 		<div th:replace="fragments/css :: css-dep"></div>
 	</head>
 
@@ -15,31 +15,91 @@
 						<a th:href="@{'/admin/updateArtist/' + ${artist.id}}" >Modifica dati artista </a><br>
 					</div>
 			        <h1 class="artist-name"><span th:text="${artist.name} + ' ' + ${artist.surname}"></span></h1>
+					
+					<div th:if="${artist.dateOfDeath} == null">
+						<span class="card-text" th:text="'Data di nascita: ' + ${artist.dateOfBirth}"></span>
+					</div>
+					<div th:if="${artist.dateOfDeath} != null">
+						<span class="card-text" th:text="${artist.dateOfBirth} + ' - ' + ${artist.dateOfDeath}"></span>
+					</div>
+					
+	                <div th:if="${artist.image} != null">
+	                    <img class="mt-2 rounded: 1" th:src="@{'/display/image/' + ${artist.image.id}}" width="20%" />
+	                </div>
+	                <div th:if="${artist.image} == null">
+	                    <img class="mt-2 rounded: 1" src="https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png"
+	                         width="20%" />
+	                </div>
 			        <div class="artist-info">
-			            <p class="mb-3"><span th:text="'(' + ${artist.dateOfBirth} + ')'">20/20/2000</span></p>
-			            <div th:if= "${!artist.starredMovies.isEmpty()}">
-			                <h2>Film dove ha recitato</h2>
-			                <ul class="movie-list">
-			                    <li th:each="movie : ${artist.starredMovies}" class="movie-list-item">
-			                        <a th:href="@{'/movie/' + ${movie.id}}" th:text="${movie.title}"></a>
-			                    </li>
-			                </ul>
+			            
+			            <div th:if="${artist.starredMovies != null && !artist.starredMovies.isEmpty()}">
+			                <h2 class="mt-5">Film dove ha recitato</h2>
+							<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
+							    <div class="col mb-4" th:each="movie : ${artist.starredMovies}">
+							      <div class="card">
+							        <div class="view overlay">
+							          <div th:if="${movie.image} != null">
+										<a th:href="@{'/movie/' + ${movie.id}}" class="mask rgba-white-slight">
+							            	<img th:src="@{'/display/image/' + ${movie.image.id}}" class="card-img-top"/>
+										</a>
+							          </div>
+							          <div th:if="${movie.image} == null">
+										<a th:href="@{'/movie/' + ${movie.id}}" class="mask rgba-white-slight">
+							            	<img src="https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png" class="card-img-top"/>
+										</a>
+							          </div>
+							        </div>
+							        <div class="card-body">
+							          <h4 class="card-title">
+							            <span th:text="${movie.title}"></span>
+							          </h4>
+							          <p>Anno di uscita: <b><span th:text="${movie.year}"></span></b></p>
+							          <p class="card-text">
+							            <span th:text="${movie.description}"></span>
+							          </p>
+							        </div>
+							      </div>
+							    </div>
+							</div>
 			            </div>
-			            <div th:if= "${!artist.directedMovies.isEmpty()}">
-			                <h2>Film che ha diretto</h2>
-			                <ul class="movie-list">
-			                    <li th:each="movie : ${artist.directedMovies}" class="movie-list-item">
-			                        <a th:href="@{'/movie/' + ${movie.id}}" th:text="${movie.title}"></a>
-			                    </li>
-			                </ul>
+			            
+			            <div th:if="${artist.directedMovies != null && !artist.directedMovies.isEmpty()}">
+			                <h2 class="mt-5">Film che ha diretto</h2>
+							<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
+							    <div class="col mb-4" th:each="movie : ${artist.directedMovies}">
+							      <div class="card">
+							        <div class="view overlay">
+							          <div th:if="${movie.image} != null">
+										<a th:href="@{'/movie/' + ${movie.id}}" class="mask rgba-white-slight">
+							            	<img th:src="@{'/display/image/' + ${movie.image.id}}" class="card-img-top"/>
+										</a>
+							          </div>
+							          <div th:if="${movie.image} == null">
+										<a th:href="@{'/movie/' + ${movie.id}}" class="mask rgba-white-slight">
+							            	<img src="https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png" class="card-img-top"/>
+										</a>
+							          </div>
+							        </div>
+							        <div class="card-body">
+							          <h4 class="card-title">
+							            <span th:text="${movie.title}"></span>
+							          </h4>
+							          <p>Anno di uscita: <b><span th:text="${movie.year}"></span></b></p>
+							          <p class="card-text">
+							            <span th:text="${movie.description}"></span>
+							          </p>
+							        </div>
+							      </div>
+							    </div>
+							</div>
 			            </div>
-			        </div>
-			        <div th:if="${artist.image} != null">
-			            <img th:src="@{'/display/image/' + ${artist.image.id}}" class="img-fluid" alt="Artist Image">
 			        </div>
 			    </div>
+			    
 			    <div th:unless="${artist}" class="not-found">Non esiste</div>
 			</div>
 		</div>
+		
+		<div th:replace="fragments/footer :: footer"></div>
 	</body>
 </html>

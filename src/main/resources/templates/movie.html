@@ -74,10 +74,11 @@
 	                                            <span
 	                                                th:text="${movie.director.dateOfBirth} + ' - ' + ${movie.director.dateOfDeath}"></span>
 	                                        </div>
-	                                        <ul th:if="${movie.director.directedMovies == null || movie.director.directedMovies.isEmpty()}">
+	                                        <ul th:if="${movie.director.directedMovies != null && !movie.director.directedMovies.isEmpty()}">
+	                                        	<h4 class="mt-2">Film che ha diretto</h4>
 												<li th:each="movie : ${movie.director.directedMovies}">
 													<a th:href="@{'/movie/' + ${movie.id}}">
-														<span th:text="${movie.title}"></span>
+														<b><span style="color: black;" class="text-decoration-none" th:text="${movie.title}"></span></b>
 													</a>
 												</li>
 											</ul>
@@ -131,107 +132,143 @@
 	        </div>
 	
 	        <div class="row mt-3">
-				
+								
+				<div class="col-md-6">
+				    <div th:if="${!reviews.isEmpty() || reviewActive!=null}">
+				        <div>
+				            <h3 class="mt-3">Recensioni</h3>
+				            <div class="blocco-carosello rounded-3 mb-4 mt-4">
+				                <div id="carouselExampleControls" class="carousel slide bg-light" data-bs-ride="carousel" data-bs-interval="false">
+				                    <div class="carousel-inner pb-5">
+				                        <div th:each="review, iterStat : ${reviews}" th:classappend="${iterStat.index == 0} ? 'carousel-item active' : 'carousel-item'">
+				                            <div class="row d-flex justify-content-center">
+				                                <div class="mt-2 col-lg-4 mt-2 d-flex justify-content-center">
+				                                    <img th:if="${review.user.image} != null"
+				                                        th:src="@{'/display/image/' + ${review.user.image.id}}"
+				                                        class="rounded-circle shadow-1 mb-4 mb-lg-0"
+				                                        alt="avatar" width="150" height="150" />
+				                                    <img th:if="${review.user.image} == null"
+				                                        src="https://cdn.pixabay.com/photo/2012/04/26/19/43/profile-42914_1280.png"
+				                                        class="rounded-circle shadow-1 mb-4 mb-lg-0"
+				                                        alt="avatar" width="150" height="150" />
+				                                </div>
+				                                <div class="col-lg-8 text-center text-lg-start mx-auto mx-lg-0">
+				                                    <h4 class="mb-4">
+				                                        <span
+				                                            th:text="${review.user.name} + ' ' + ${review.user.surname} + ' (@' + ${review.user.credentials.username} + ')'">
+				                                        </span>
+				                                    </h4>
+				                                    <span th:utext="${movie.printStars(review.score)}"></span>
+				                                    <h4 class="mb-0 pb-3" th:text="${review.title}"></h4>
+				                                    <p class="mb-0 pb-3" th:text="${review.body}" ></p>
+				                                </div>
+				                            </div>
+				                        </div>
+				                    </div>
+				                    <div class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+				                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+				                        <span class="visually-hidden">Previous</span>
+				                    </div>
+				                    <div class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+				                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+				                        <span class="visually-hidden">Next</span>
+				                    </div>
+				                </div>
+				            </div>
+				        </div>
+				    </div>
+				</div>
+
+
 	            <div class="col-md-6">
-	                <div class="card" th:if="${reviews != null && !reviews.isEmpty()}">
-	                    <div class="card-body">
-	                        <h3 class="card-title mt-3">Recensioni:</h3>
-	                        <div th:if="${!reviews.isEmpty()}" class="container my-5 py-5">
-	                            <div class="row d-flex justify-content-center">
-	                                <div class="col-md-12">
-	                                    <div class="card">
-	                                         <div class="card-body px-4 py-5">
-	                                            <div id="carouselDarkVariant" class="carousel slide carousel-dark"
-	                                                data-mdb-ride="carousel">
-	                                                <div class="carousel-inner pb-5" th:each="review : ${reviews}">
-	                                                    <div class="carousel-item active">
-	                                                        <div class="row d-flex justify-content-center">
-	                                                            <div class="col-lg-4 d-flex justify-content-center">
-	                                                                <img th:if="${review.user.image} != null"
-	                                                                    th:src="@{'/display/image/' + ${review.user.image.id}}"
-	                                                                    class="rounded-circle shadow-1 mb-4 mb-lg-0"
-	                                                                    alt="avatar" width="150" height="150" />
-	                                                                <img th:if="${review.user.image} == null"
-	                                                                    src="https://cdn.pixabay.com/photo/2012/04/26/19/43/profile-42914_1280.png"
-	                                                                    class="rounded-circle shadow-1 mb-4 mb-lg-0"
-	                                                                    alt="avatar" width="150" height="150" />
-	                                                            </div>
-	                                                            <div class="col-lg-8 text-center text-lg-start mx-auto mx-lg-0">
-	                                                                <h4 class="mb-4">
-	                                                                    <span
-	                                                                        th:text="${review.user.name} + ' ' + ${review.user.surname} + ' [@' + ${review.user.credentials.username} + ']'"></span>
-	                                                                </h4>
-	                                                                <p class="mb-0 pb-3">
-	                                                                    <span th:text="${review.body}"></span>
-	                                                                </p>
-	                                                            </div>
-	                                                        </div>
-	                                                    </div>
-	                                                </div>
-	                                                <button class="carousel-control-prev" type="button"
-	                                                    data-mdb-target="#carouselDarkVariant" data-mdb-slide="prev">
-	                                                    <span class="carousel-control-prev-icon"
-	                                                        aria-hidden="true"></span>
-	                                                    <span class="visually-hidden">Previous</span>
-	                                                </button>
-	                                                <button class="carousel-control-next" type="button"
-	                                                    data-mdb-target="#carouselDarkVariant" data-mdb-slide="next">
-	                                                    <span class="carousel-control-next-icon"
-	                                                        aria-hidden="true"></span>
-	                                                    <span class="visually-hidden">Next</span>
-	                                                </button>
-	                                            </div>
-	                                        </div>
-	                                    </div>
-	                                </div>
-	                            </div>
-	                        </div>
-	                    </div>
-	                </div>
-	            </div>
-	            
-	            <div class="col-md-6">
-	                <form class="adminForm rounded-2"
-	                    th:action="@{'/newReview/' + ${movie.id} + '/' + ${currentUser.id}}" method="POST"
-	                    th:object="${review}">
-	                    <label class="form-label" th:if="${#fields.hasErrors('title')}"
-	                        th:errors="*{title}"></label>
-	                    <div class="input-group">
-							<div class="input-group-prepend">
-	                        	<span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-heading"></i></span>
-							</div>
-	                        <input required th:field="${review.title}" id="titolo" type="text" class="form-control"
-	                            placeholder="Titolo" aria-label="titolo" aria-describedby="basic-addon1">
-	                    </div>
-	                    <label class="form-label" th:if="${#fields.hasErrors('score')}"
-	                        th:errors="*{score}"></label>
-	                    <div class="input-group">
-							<div class="input-group-prepend">
-	                        	<span class="input-group-text" id="basic-addon2"><i class="fa-solid fa-star"></i></span>
-							</div>
-	                        <input required type="number" th:field="${review.score}" id="voto" min="1" max="5"
-	                            class="form-control" placeholder="Voto" aria-label="voto" aria-describedby="basic-addon2">
-	                    </div>
-	                    <label class="form-label" th:if="${#fields.hasErrors('body')}"
-	                        th:errors="*{body}"></label>
-	                    <div class="input-group mb-3">
-							<div class="input-group-prepend">
-	                        	<span class="input-group-text" id="basic-addon3"><i class="fa-sharp fa-solid fa-text-size"></i></span>
-							</div>
-	                        <input required th:field="${review.body}" id="testo" type="text" class="form-control"
-	                            placeholder="Perché ti è piaciuto questo film?" rows="5" aria-label="testo"
-	                            aria-describedby="basic-addon3">
-	                    </div>
-	                    <div class="text-center">
-	                        <button class="btn btn-success" type="submit">Conferma</button>
-	                    </div>
-	                </form>
-	            </div>
-	            
+					
+					<div th:if="${userReview == null}">
+		                <form class="adminForm rounded-2"
+		                    th:action="@{'/newReview/' + ${movie.id} + '/' + ${currentUser.id}}" method="POST"
+		                    th:object="${newReview}">
+		                    <label class="form-label" th:if="${#fields.hasErrors('title')}"
+		                        th:errors="*{title}"></label>
+		                    <div class="input-group">
+								<div class="input-group-prepend">
+		                        	<span class="input-group-text" id="basic-addon1"><i class="fas fa-quote-right"></i></span>
+								</div>
+		                        <input required th:field="${newReview.title}" id="titolo" type="text" class="form-control"
+		                            placeholder="Titolo" aria-label="titolo" aria-describedby="basic-addon1">
+		                    </div>
+		                    <label class="form-label" th:if="${#fields.hasErrors('score')}"
+		                        th:errors="*{score}"></label>
+		                    <div class="input-group">
+								<div class="input-group-prepend">
+		                        	<span class="input-group-text" id="basic-addon2"><i class="fas fa-star"></i></span>
+								</div>
+		                        <input required type="number" th:field="${newReview.score}" id="voto" min="1" max="5"
+		                            class="form-control" placeholder="Voto (da 1 a 5)" aria-label="voto" aria-describedby="basic-addon2">
+		                    </div>
+		                    <label class="form-label" th:if="${#fields.hasErrors('body')}"
+		                        th:errors="*{body}"></label>
+		                    <div class="input-group mb-3">
+								<div class="input-group-prepend">
+		                        	<span class="input-group-text" id="basic-addon3"><i class="fas fa-comment"></i></span>
+								</div>
+		                        <input required th:field="${newReview.body}" id="testo" type="text" class="form-control"
+		                            placeholder="Perché ti è piaciuto questo film?" rows="5" aria-label="testo"
+		                            aria-describedby="basic-addon3">
+		                    </div>
+		                    <div class="text-center">
+		                        <button class="btn btn-success" type="submit">Conferma</button>
+		                    </div>
+		                </form>
+		            </div>
+		            
+					<div th:if="${userReview != null}">
+				    	<h3 class="mt-3">Modifica recensione</h3>
+		                <form class="adminForm rounded-2"
+		                    th:action="@{'/updateReview/' + ${userReview.id}}" method="POST">
+		                    <label class="form-label" th:if="${#fields.hasErrors('userReview.title')}"
+		                        th:errors="*{title}"></label>
+		                    <div class="input-group">
+								<div class="input-group-prepend">
+		                        	<span class="input-group-text" id="basic-addon1"><i class="fas fa-quote-right"></i></span>
+								</div>
+		                        <input th:field="${userReview.title}" id="titolo" type="text" class="form-control"
+		                            placeholder="Nuovo titolo" aria-label="titolo" aria-describedby="basic-addon1">
+		                    </div>
+		                    <label class="form-label" th:if="${#fields.hasErrors('userReview.score')}"
+		                        th:errors="*{score}"></label>
+		                    <div class="input-group">
+								<div class="input-group-prepend">
+		                        	<span class="input-group-text" id="basic-addon2"><i class="fas fa-star"></i></span>
+								</div>
+		                        <input type="number" th:field="${userReview.score}" id="voto" min="1" max="5"
+		                            class="form-control" placeholder="Nuovo voto (da 1 a 5)" aria-label="voto" aria-describedby="basic-addon2">
+		                    </div>
+		                    <label class="form-label" th:if="${#fields.hasErrors('userReview.body')}"
+		                        th:errors="*{body}"></label>
+		                    <div class="input-group mb-3">
+								<div class="input-group-prepend">
+		                        	<span class="input-group-text" id="basic-addon3"><i class="fas fa-comment"></i></span>
+								</div>
+		                        <input th:field="${userReview.body}" id="testo" type="text" class="form-control"
+		                            placeholder="Hai cambiato idea sul perché ti è piaciuto questo film?" rows="5" aria-label="testo"
+		                            aria-describedby="basic-addon3">
+		                    </div>
+		                    <div class="text-center">
+		                        <button class="btn btn-success" type="submit">Conferma</button>
+		                    </div>
+		                </form>
+			            <div class="text-center">
+							<a th:href="@{'/deleteReview/' + ${userReview.id}}"><button type="button" class="mt-4 mt-2 btn btn-danger">Elimina recensione</button></a>
+						</div>
+		            </div>
+
+
+				</div>
+
 	        </div>
 	    </div>
 	    
 		<div th:replace="fragments/footer :: footer"></div>
+		
 	</body>
 </html>
 
