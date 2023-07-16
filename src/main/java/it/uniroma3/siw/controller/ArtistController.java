@@ -1,6 +1,7 @@
 package it.uniroma3.siw.controller;
 
 import java.io.IOException;
+import java.time.LocalDate;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -80,6 +81,30 @@ public class ArtistController {
 			return "admin/formNewArtist.html"; 
 		}
 	}
+	
+	
+	@GetMapping("/admin/formUpdateArtist/{id}")
+	public String formUpdateMovie(@PathVariable("id") Long id, Model model) {
+		model.addAttribute("artist", artistService.getArtist(id));
+		return "admin/formUpdateArtist.html";
+	}
+	
+	@PostMapping ("/admin/updateArtist")
+	  public String updateArtist (@Valid @ModelAttribute("artist") Artist artist, 
+			  BindingResult bindingResult, Model model, 
+			  @RequestParam("name") String name, @RequestParam("surname") String surname,
+			  @RequestParam("dateOfDeath") LocalDate dateOfBirth, @RequestParam("dateOfDeath") LocalDate dateOfDeath,
+			  @RequestParam("imageFile") MultipartFile multipartFile) throws IOException {
+
+		  if (artist == null)
+			  return "index.html";
+		  this.artistService.updateArtist(artist, name, surname, dateOfBirth, dateOfDeath);
+			
+		  this.artistService.addArtist(artist);
+		  
+		  return "redirect:/artist/" + artist.getId();
+
+	  }
 	
 	  @GetMapping("/admin/deleteArtist/{id}")
 	  public String deleteArtist(Model model, @PathVariable("id") Long id) {

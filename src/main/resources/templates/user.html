@@ -45,40 +45,50 @@
 			        <p class="mb-0"><a th:href="@{'/reviews/' + ${user.id}}" class="text-muted">Mostra tutti</a></p>
 			    </div>
 			    <div class="row g-2">
-			        <div class="col mb-2" th:if="${firstReviewed}">
-			            <div th:if="${firstReviewed.movie.image} != null">
-			                <img th:src="@{'/display/image/' + ${firstReviewed.movie.image.id}}" class="rounded-3" />
-			            </div>
-			            <div th:if="${firstReviewed.movie.image} == null">
-			                <img src="/images/image-not-available.jpeg" class="rounded-3" />
-			            </div>
-			        </div>
-			        <div class="col mb-2" th:if="${secondReviewed}">
-			            <div th:if="${secondReviewed.movie.image} != null">
-			                <img th:src="@{'/display/image/' + ${secondReviewed.movie.image.id}}" class="rounded-3" />
-			            </div>
-			            <div th:if="${secondReviewed.movie.image} == null">
-			                <img src="/images/image-not-available.jpeg" class="rounded-3" />
-			            </div>
-			        </div>
-			    </div>
-			    <div class="row g-2">
-			        <div class="col" th:if="${thirdReviewed}">
-			            <div th:if="${thirdReviewed.movie.image} != null">
-			                <img th:src="@{'/display/image/' + ${thirdReviewed.movie.image.id}}" class="rounded-3" />
-			            </div>
-			            <div th:if="${thirdReviewed.movie.image} == null">
-			                <img src="/images/image-not-available.jpeg" class="rounded-3" />
-			            </div>
-			        </div>
-			        <div class="col" th:if="${fourthReviewed}">
-			            <div th:if="${fourthReviewed.movie.image} != null">
-			                <img th:src="@{'/display/image/' + ${fourthReviewed.movie.image.id}}" class="rounded-3" />
-			            </div>
-			            <div th:if="${fourthReviewed.movie.image} == null">
-			                <img src="/images/image-not-available.jpeg" class="rounded-3" />
-			            </div>
-			        </div>
+					<div>
+				        <div class="col" th:if="${firstReviewed}">
+				            <div th:if="${firstReviewed.movie.image} != null">
+				                <img th:src="@{'/display/image/' + ${firstReviewed.movie.image.id}}" class="card-img-top rounded-3" />
+				            </div>
+				            <div th:if="${firstReviewed.movie.image} == null">
+				                <img src="/images/image-not-available.jpeg" class="card-img-top rounded-3" />
+				            </div>
+				        </div>
+					</div>
+					
+					<div>
+				        <div class="col" th:if="${secondReviewed}">
+				            <div th:if="${secondReviewed.movie.image} != null">
+				                <img th:src="@{'/display/image/' + ${secondReviewed.movie.image.id}}" class="card-img-top rounded-3" />
+				            </div>
+				            <div th:if="${secondReviewed.movie.image} == null">
+				                <img src="/images/image-not-available.jpeg" class="card-img-top rounded-3" />
+				            </div>
+				        </div>
+					</div>
+					
+					<div>
+				        <div class="col" th:if="${thirdReviewed}">
+				            <div th:if="${thirdReviewed.movie.image} != null">
+				                <img th:src="@{'/display/image/' + ${thirdReviewed.movie.image.id}}" class="card-img-top rounded-3" />
+				            </div>
+				            <div th:if="${thirdReviewed.movie.image} == null">
+				                <img src="/images/image-not-available.jpeg" class="card-img-top rounded-3" />
+				            </div>
+				        </div>		
+					</div>
+				        
+					<div>
+				        <div class="col" th:if="${fourthReviewed}">
+				            <div th:if="${fourthReviewed.movie.image} != null">
+				                <img th:src="@{'/display/image/' + ${fourthReviewed.movie.image.id}}" class="card-img-top rounded-3" />
+				            </div>
+				            <div th:if="${fourthReviewed.movie.image} == null">
+				                <img src="/images/image-not-available.jpeg" class="card-img-top rounded-3" />
+				            </div>
+				        </div>
+					</div>
+					
 			    </div>
 			</div>
 		</div><!-- Fine profilo -->

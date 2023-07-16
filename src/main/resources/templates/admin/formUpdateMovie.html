@@ -2,43 +2,59 @@
 <html>
 	<head>
 		<title>
-			Aggiornamento Film
+			Modifica Film
 		</title>
-		<link rel="stylesheet" href="/css/admin/form_update_movie_style.css" />
 		<div th:replace="fragments/css :: css-dep"></div>
 	</head>
 
-<body>
-	<div th:replace="fragments/navbar :: navbar"></div>
-
-	
-	<div class="container">
-		<h1 class="update-movie-title">Aggiorna film</h1>
-	
-		<div th:if="${movie}" class="movie-details">
-		    <div class="movie-info">
-		        <span th:text="${movie.title}" class="movie-title">Up!</span>
-		        <span th:text="'(' + ${movie.year} + ')'">2000</span>
-		    </div>
-		    <div th:if="${movie.director}" class="director-info">
-		        <span>Regista: </span>
-		        <span th:text="${movie.director.name} + ' ' + ${movie.director.surname}" class="director-name">Steven Spielberg</span>
-		        <a th:href="@{'/admin/addDirector/' + ${movie.id}}" class="modify-director">Modifica regista</a>
-		    </div>
-		    <div class="actors-info">
-		        <span>Attori: </span>
-		        <div th:each="actor: ${movie.actors}" class="actor">
-		            <span th:text="${actor.name} + ' ' + ${actor.surname}">Al Pacino</span>
-		        </div>
-		        <a th:href="@{'/admin/updateActors/' + ${movie.id}}" class="modify-actors">
-		            <button type="button">Modifica</button>
-		        </a>
-		    </div>
+	<body>
+		<div th:replace="fragments/navbar :: navbar"></div>
+		
+		<div class="container">
+			
+			<h1 class="mt-4 mb-4">
+			    <span class="ms-2">Modifica Film</span>
+			</h1>
+			
+			<form th:action="@{/admin/updateMovie}" method="POST" th:object="${movie}" enctype="multipart/form-data" class="mb-4">
+			    <div class="row">
+			        <div class="col-md-6 mb-3">
+			            <label for="title" class="form-label"><b>Titolo:</b></label>
+			            <input type="text" class="form-control" id="title" th:field="${movie.title}">
+			            <div class="invalid-feedback" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>
+			        </div>
+			        <div class="col-md-6 mb-3">
+			            <label for="year" class="form-label"><b>Anno di uscita:</b></label>
+			            <input type="number" min="1958" max="2023" class="form-control" id="year" th:field="${movie.year}">
+			            <div class="invalid-feedback" th:if="${#fields.hasErrors('year')}" th:errors="*{year}"></div>
+			        </div>
+			    </div>
+			    <div class="row">
+			         <div class="col-md-6 mb-3">
+			            <label for="image" class="form-label"><b>Immagine:</b></label>
+			            <input type="file" name="file" class="form-control" id="file" accept="file/png, file/jpeg, file/jpg">
+			            <div class="invalid-feedback" th:if="${#fields.hasErrors('image')}" th:errors="*{image}"></div>
+			        </div>
+				    <div class="actors-info">
+				        <span>Attori: </span>
+				        <div th:each="actor: ${movie.actors}" class="actor">
+				            <span th:text="${actor.name} + ' ' + ${actor.surname}">Al Pacino</span>
+				        </div>
+				        <a th:href="@{'/admin/updateActors/' + ${movie.id}}" class="modify-actors">
+				            <button type="button">Modifica</button>
+				        </a>
+				    </div>
+			    </div>
+			    <div class="mt-4 mb-3">
+			        <label for="description" class="form-label"><b>Descrizione:</b></label>
+			        <textarea class="form-control" id="description" rows="5" th:field="${movie.description}"></textarea>
+			    </div>
+			    <div>
+			        <button type="submit" class="btn btn-success">Conferma</button>
+			    </div>
+			</form>
+		    
 		    <div th:unless="${movie}" class="non-existing-movie">Film non esistente</div>
 		</div>
-	</div>
-
-
-</body>
-
+	</body>
 </html>

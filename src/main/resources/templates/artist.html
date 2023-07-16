@@ -12,7 +12,15 @@
 			<div class="artist-details">
 			    <div th:if="${artist}">
 					<div th:if="${currentUser != null && currentUser.isAdmin()}">
-						<a th:href="@{'/admin/updateArtist/' + ${artist.id}}" >Modifica dati artista </a><br>
+						<div class="d-flex">
+						    <div>
+								<a th:href="@{'/admin/formUpdateArtist/' + ${artist.id}}"><button type="button" class="mt-4 mb-2 btn btn-warning">Modifica Artista</button></a>
+							</div>	
+						    <div>
+								<a th:href="@{'/admin/deleteArtist/' + ${artist.id}}"><button type="button" class="mt-4 mb-2 btn btn-danger">Elimina Artista</button></a>
+							</div>	
+						</div>	
+						<br>
 					</div>
 			        <h1 class="artist-name"><span th:text="${artist.name} + ' ' + ${artist.surname}"></span></h1>
 					

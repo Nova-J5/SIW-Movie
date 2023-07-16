@@ -153,10 +153,6 @@ public class MovieController {
 		model.addAttribute("movie", movieService.getMovie(id));
 		return "admin/formUpdateMovie.html";
 	}
-
-
-	
-
 	
 	@GetMapping(value="/admin/setDirectorToMovie/{directorId}/{movieId}")
 	public String setDirectorToMovie(@PathVariable("directorId") Long directorId, @PathVariable("movieId") Long movieId, Model model) {
@@ -182,19 +178,21 @@ public class MovieController {
 		return "admin/actorsToAdd.html";
 	}
 	
-	@PostMapping ("/admin/updateMovie/{id}")
-	  public String modifyMovie (Model model, @PathVariable("id") Long id, 
+	@PostMapping ("/admin/updateMovie")
+	  public String updateMovie (@Valid @ModelAttribute("movie") Movie movie, 
+			  BindingResult bindingResult, Model model, 
 			  @RequestParam("title") String title, @RequestParam("year") Integer year,
-			  @RequestParam("imageFile") MultipartFile multipartFile, @RequestParam("artistId") Long artistId ) throws IOException {
-		  Movie movie = this.movieService.getMovie(id);
+			  @RequestParam("description") String description,
+			  @RequestParam("imageFile") MultipartFile multipartFile) throws IOException {
+
 		  if (movie == null)
-			  return "movieError.html";
+			  return "index.html";
 		  this.movieService.updateMovie(movie, title, year, null);
 			
-		  
 		  this.movieService.addMovie(movie);
+		  
+		  return "redirect:/movie/" + movie.getId();
 
-		  return "/movies";
 	  }
 
 	@GetMapping(value="/admin/addActorToMovie/{actorId}/{movieId}")
@@ -229,16 +227,11 @@ public class MovieController {
 		return "admin/actorsToAdd.html";
 	}
 	
-	@GetMapping("/admin/formDeleteMovie")
-	public String formDeleteMovie(Model model) {
-		model.addAttribute("movies", this.movieService.getAllMovies());
-		return "admin/formDeleteMovie.html";
-	}
-	
-	@PostMapping("/admin/deleteMovie{id}")
+	@GetMapping("/admin/deleteMovie/{id}")
 	public String deleteMovie(@PathVariable("id") Long id, Model model) {
 		this.movieService.deleteMovie(id);
-		return "/movies";
+		model.addAttribute("movies", this.movieService.getAllMovies());
+		return "movies.html";
 	}
 	
 

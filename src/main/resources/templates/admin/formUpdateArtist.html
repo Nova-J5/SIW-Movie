@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>
+			Modifica Artista
+		</title>
+		<div th:replace="fragments/css :: css-dep"></div>
+	</head>
+
+	<body>
+		<div th:replace="fragments/navbar :: navbar"></div>
+	
+		<div class="container">
+			
+			<h1 class=" mt-4 mb-4">
+			    <span class="ms-2">Modifica Artista</span>
+			</h1>		
+			
+			<form th:action="@{/admin/updateArtist}" method="post" th:object="${artist}" class="add-artist-form" enctype="multipart/form-data">
+			    <div>
+			        <span th:text="${messaggioErrore}" class="error-message">Errore</span>
+			    </div>
+			
+			    <div class="form-row">
+			        <label class="form-label">Nome:</label>
+			        <input type="text" th:field="${artist.name}" class="form-input" />
+			    </div>
+			
+			    <div class="form-row">
+			        <label class="form-label">Cognome:</label>
+			        <input type="text" th:field="${artist.surname}" class="form-input" />
+			    </div>
+			
+			    <div class="form-row">
+			        <label class="form-label">Data di nascita:</label>
+			        <input type="date" th:field="${artist.dateOfBirth}" class="form-input" />
+			    </div>
+			    
+				<div class="form-row">
+			        <label class="form-label">Data di morte (opzionale):</label>
+			        <input type="date" th:field="${artist.dateOfDeath}" class="form-input" />
+			    </div>
+			
+			    <div class="form-row">
+			         <div class="mb-3">
+			            <label for="image" class="form-label"><b>Immagine:</b></label>
+			            <input type="file" name="file" class="form-control" id="file" accept="file/png, file/jpeg, file/jpg">
+			            <div class="invalid-feedback" th:if="${#fields.hasErrors('image')}" th:errors="*{image}"></div>
+			        </div>
+			    </div>
+			    <div class="mt-2">
+			        <button type="submit" class="btn btn-success">Conferma</button>
+			    </div>
+			</form>
+		</div>
+	</body>
+</html>
