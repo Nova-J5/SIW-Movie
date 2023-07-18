@@ -178,16 +178,23 @@ public class MovieController {
 		return "admin/actorsToAdd.html";
 	}
 	
-	@PostMapping ("/admin/updateMovie")
-	  public String updateMovie (@Valid @ModelAttribute("movie") Movie movie, 
-			  BindingResult bindingResult, Model model, 
+	@PostMapping ("/admin/updateMovie/{id}")
+	  public String updateMovie (@PathVariable("id") Long id,  
 			  @RequestParam("title") String title, @RequestParam("year") Integer year,
 			  @RequestParam("description") String description,
-			  @RequestParam("imageFile") MultipartFile multipartFile) throws IOException {
+			  @RequestParam("file") MultipartFile file) throws IOException {
 
+		  Movie movie = this.movieService.getMovie(id);
 		  if (movie == null)
 			  return "index.html";
-		  this.movieService.updateMovie(movie, title, year, null);
+		  
+		  if (!file.isEmpty()) {
+			  Image img = new Image(file.getBytes());
+			  this.imageService.save(img);
+			  movie.setImage(img);
+		  }	
+		  
+		  this.movieService.updateMovie(movie, title, year, description);
 			
 		  this.movieService.addMovie(movie);
 		  

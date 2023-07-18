@@ -62,11 +62,10 @@ public class ArtistService {
 
 	
 	@Transactional
-	public void updateArtist(Artist artist, String name, String surname, LocalDate dateOfBirth, LocalDate dateOfDeath) {
+	public void updateArtist(Artist artist, String name, String surname, LocalDate dateOfBirth) {
 		artist.setName(name);
 		artist.setSurname(surname);
 		artist.setDateOfBirth(dateOfBirth);
-		artist.setDateOfDeath(dateOfDeath);
 	}
 	
 	

@@ -1,6 +1,7 @@
 package it.uniroma3.siw.controller;
 
 import java.io.IOException;
+
 import java.time.LocalDate;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,6 @@ import org.springframework.web.multipart.MultipartFile;
 import it.uniroma3.siw.controller.validator.ArtistValidator;
 import it.uniroma3.siw.model.Artist;
 import it.uniroma3.siw.model.Image;
-import it.uniroma3.siw.model.Movie;
 import it.uniroma3.siw.service.ArtistService;
 import it.uniroma3.siw.service.ImageService;
 import jakarta.validation.Valid;
@@ -89,16 +89,22 @@ public class ArtistController {
 		return "admin/formUpdateArtist.html";
 	}
 	
-	@PostMapping ("/admin/updateArtist")
-	  public String updateArtist (@Valid @ModelAttribute("artist") Artist artist, 
-			  BindingResult bindingResult, Model model, 
+	@PostMapping ("/admin/updateArtist/{id}")
+	  public String updateArtist (@PathVariable("id") Long id,
 			  @RequestParam("name") String name, @RequestParam("surname") String surname,
-			  @RequestParam("dateOfDeath") LocalDate dateOfBirth, @RequestParam("dateOfDeath") LocalDate dateOfDeath,
-			  @RequestParam("imageFile") MultipartFile multipartFile) throws IOException {
+			  @RequestParam("dateOfBirth") LocalDate dateOfBirth,
+			  @RequestParam("file") MultipartFile file) throws IOException {
 
+		  Artist artist = this.artistService.getArtist(id);
 		  if (artist == null)
 			  return "index.html";
-		  this.artistService.updateArtist(artist, name, surname, dateOfBirth, dateOfDeath);
+		  
+		  if (!file.isEmpty()) {
+			  Image img = new Image(file.getBytes());
+			  this.imageService.save(img);
+			  artist.setImage(img);
+		  }	
+		  this.artistService.updateArtist(artist, name, surname, dateOfBirth);
 			
 		  this.artistService.addArtist(artist);
 		  

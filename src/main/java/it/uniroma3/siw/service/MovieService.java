@@ -59,10 +59,10 @@ public class MovieService {
 	}
 	
 	@Transactional
-	public void updateMovie (Movie movie, String title, Integer year, Artist director) {
+	public void updateMovie (Movie movie, String title, Integer year, String description) {
 		movie.setTitle(title);
 		movie.setYear(year);
-		movie.setDirector(director);
+		movie.setDescription(description);
 	}
 
 	@Transactional

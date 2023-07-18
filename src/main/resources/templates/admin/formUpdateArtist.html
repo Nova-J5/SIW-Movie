@@ -16,42 +16,43 @@
 			    <span class="ms-2">Modifica Artista</span>
 			</h1>		
 			
-			<form th:action="@{/admin/updateArtist}" method="post" th:object="${artist}" class="add-artist-form" enctype="multipart/form-data">
+			<form th:action="@{'/admin/updateArtist/' + ${artist.id}}" method="post" class="add-artist-form" enctype="multipart/form-data">
 			    <div>
 			        <span th:text="${messaggioErrore}" class="error-message">Errore</span>
 			    </div>
 			
 			    <div class="form-row">
-			        <label class="form-label">Nome:</label>
-			        <input type="text" th:field="${artist.name}" class="form-input" />
+			        <label for="name" class="form-label">Nome:</label>
+			        <input type="text" name="name" id="name" th:field="${artist.name}" class="form-input" />
+			        <div class="invalid-feedback" th:if="${#fields.hasErrors('artist.name')}" th:errors="*{name}"></div>
+
 			    </div>
 			
 			    <div class="form-row">
-			        <label class="form-label">Cognome:</label>
-			        <input type="text" th:field="${artist.surname}" class="form-input" />
+			        <label for="surname" class="form-label">Cognome:</label>
+			        <input type="text" name="surname" id="surname" th:field="${artist.surname}" class="form-input" />
+			        <div class="invalid-feedback" th:if="${#fields.hasErrors('artist.surname')}" th:errors="*{surname}"></div>
 			    </div>
 			
 			    <div class="form-row">
-			        <label class="form-label">Data di nascita:</label>
-			        <input type="date" th:field="${artist.dateOfBirth}" class="form-input" />
-			    </div>
-			    
-				<div class="form-row">
-			        <label class="form-label">Data di morte (opzionale):</label>
-			        <input type="date" th:field="${artist.dateOfDeath}" class="form-input" />
+			        <label for="dateOfBirth" class="form-label">Data di nascita:</label>
+			        <input type="date" name="dateOfBirth" id="dateOfBirth" th:field="${artist.dateOfBirth}" class="form-input" />
+			        <div class="invalid-feedback" th:if="${#fields.hasErrors('artist.dateOfBirth')}" th:errors="*{dateOfBirth}"></div>
 			    </div>
 			
 			    <div class="form-row">
 			         <div class="mb-3">
 			            <label for="image" class="form-label"><b>Immagine:</b></label>
 			            <input type="file" name="file" class="form-control" id="file" accept="file/png, file/jpeg, file/jpg">
-			            <div class="invalid-feedback" th:if="${#fields.hasErrors('image')}" th:errors="*{image}"></div>
+			            <div class="invalid-feedback" th:if="${#fields.hasErrors('artist.image')}" th:errors="*{image}"></div>
 			        </div>
 			    </div>
 			    <div class="mt-2">
 			        <button type="submit" class="btn btn-success">Conferma</button>
 			    </div>
 			</form>
+			
+		    <div th:unless="${artist}">Artista non esistente</div>
 		</div>
 	</body>
 </html>
